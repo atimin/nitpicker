@@ -13,7 +13,7 @@ with open('LICENSE') as f:
 
 setup(
     name='nitpicker',
-    version='0.1.0',
+    version='0.0.1',
     description='CLI tool for QA',
     long_description=readme,
     author='Aleksey Timin',
