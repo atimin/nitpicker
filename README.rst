@@ -12,7 +12,7 @@ many developers and testers might be familiar to:
 
 1. QA tests are not under version control with the code. Why not?
 As developers, we would like to do some review of tests like code
-review. As manger I would be calm knowing that all QA plans and cases
+review. As a manger I would be calm knowing that all QA plans and cases
 are stored with the code on Git repository always available.
 
 2. QA tests stay apart from the develop cycle. I can ban a merge
@@ -23,12 +23,12 @@ the needed tests.
 
 3. A QA tool should be interactive. When you see a whole test
 case with all the steps it is hard not to jump between them trying
-to do test as fast as possible. When a tester is in a dialog with
+to do test as fast as possible. When a tester is in a dialogue with
 a tool and goes step-by-step, they can test more carefully. Especially,
 if the tool keep time tracking automatically.
 
 
-How does it woks?
+How does it work?
 .........................
 All your tests and run reports are stored in YAML
 format with the code which they test.
@@ -57,7 +57,7 @@ Nitpicker provides command to create a test case:
 
     python nitpicker.py add test_case -p feature_1.plan_1
 
-Then you should write the case by using your favorite text editor.
+Then you should write the case by using your favourite text editor.
 It is a not bad idea to commit and push it, so your teammate can
 review the case before you run the plan which the case belongs to.
 
