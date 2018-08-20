@@ -1,0 +1,12 @@
+cases:
+  add_new_case.yml:
+    description: Add a new case
+    failed_action: Run command 'python -r nitpicker/nitpicker.py test_qa add test_test_case
+      -p commands'
+    failed_reaction: File 'test_test_case.yml' should appear in test_qa/commands directory
+    failed_step: 1
+    finished: '2018-08-20 18:03:02'
+    started: '2018-08-20 18:02:22'
+    status: failed
+finished: '2018-08-20 18:03:02'
+started: '2018-08-20 18:02:19'

@@ -1,0 +1,8 @@
+cases:
+  add_new_case.yml:
+    description: Add a new case
+    finished: '2018-08-20 18:04:50'
+    started: '2018-08-20 18:03:38'
+    status: passed
+finished: '2018-08-20 18:04:50'
+started: '2018-08-20 18:03:36'
