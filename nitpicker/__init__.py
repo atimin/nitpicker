@@ -1,1 +1,1 @@
-from .nitpicker import hmm
+from .nitpicker import main
