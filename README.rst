@@ -79,6 +79,6 @@ repo to a CI server can check if all tests are passed
 
     python nitpicker.py check
     
- 
- The project uses itself for testing. You can find *qa* directory in the repo.
- Also you can run some plans for demonstration.
+
+The project uses itself for testing. You can find *qa* directory in the repo.
+Also you can run some plans for demonstration.
