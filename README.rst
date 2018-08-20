@@ -72,9 +72,13 @@ tester step by step. The results of the run will be written in
 directory *runs* in YAML format. These reports cab be used
 to generate .html, .md., .rst etc human friendly formats.
 
-After all the tests have been run you can push the reports into the git
+After all the test cases have been run you can push the reports into the git
 repo to a CI server can check if all tests are passed
 
 ::
 
     python nitpicker.py check
+    
+ 
+ The project uses itself for testing. You can find *qa* directory in the repo.
+ Also you can run some plans for demonstration.
