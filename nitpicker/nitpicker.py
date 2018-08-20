@@ -88,7 +88,7 @@ def list(ctx):
 @click.argument('test_plan')
 @click.pass_context
 def run(ctx, test_plan):
-    case_dir = os.path.join(*(ctx.obj['ROOT'] + test_plan.split('.')))
+    case_dir = os.path.join(*([ctx.obj['ROOT']] + test_plan.split('.')))
 
     for root, _, files in os.walk(case_dir):
         files = [f for f in files if '.yml' in f]
