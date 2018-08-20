@@ -5,7 +5,6 @@ import time
 import yaml
 import termcolor
 
-QU_DIR = 'qa'
 
 TEST_CASE_TEMPLATE = '''
 created: {created}
@@ -25,18 +24,22 @@ teardown:
 
 '''
 
+
 @click.group()
-def main():
-    click.echo('Nitpicker is a CLI tool to make QA better.')
-    pass
+@click.option('--root', '-r', type=str, default='qa')
+@click.pass_context
+def main(ctx, root):
+    ctx.obj = dict()
+    ctx.obj['ROOT'] = root
 
 
 @main.command()
 @click.argument('test_case_name')
 @click.option('--plan', '-p', type=str, default='')
 @click.option('--force', '-f', type=bool, default=False, is_flag=True)
-def add(test_case_name, plan, force):
-    case_dir = os.path.join(*([QU_DIR] + plan.split('.')))
+@click.pass_context
+def add(ctx, test_case_name, plan, force):
+    case_dir = os.path.join(*([ctx.obj['ROOT']] + plan.split('.')))
     case_file_path = os.path.join(case_dir, test_case_name + '.yml')
 
     if not os.path.exists(case_dir):
@@ -53,11 +56,11 @@ def add(test_case_name, plan, force):
 
     f = open(case_file_path, 'w')
     f.write(TEST_CASE_TEMPLATE.format(**data))
-    pass
 
 
 @main.command()
-def list():
+@click.pass_context
+def list(ctx):
 
     def calc_plans(path):
         count = 0
@@ -66,10 +69,10 @@ def list():
 
         return count
 
-    print('You project has {} test cases'.format(calc_plans(QU_DIR)))
-    for root, dirs, files in os.walk(QU_DIR):
-        if not root == QU_DIR:
-            level = root.replace(QU_DIR, '').count(os.sep) - 1
+    print('You project has {} test cases'.format(calc_plans(ctx.obj['ROOT'])))
+    for root, dirs, files in os.walk(ctx.obj['ROOT']):
+        if not root == ctx['ROOT']:
+            level = root.replace(ctx.obj['ROOT'], '').count(os.sep) - 1
             indent = ' '*2*level
             subindent: str = ' '*2*(level + 1)
 
@@ -83,8 +86,9 @@ def list():
 
 @main.command()
 @click.argument('test_plan')
-def run(test_plan):
-    case_dir = os.path.join(*([QU_DIR] + test_plan.split('.')))
+@click.pass_context
+def run(ctx, test_plan):
+    case_dir = os.path.join(*(ctx.obj['ROOT'] + test_plan.split('.')))
 
     for root, _, files in os.walk(case_dir):
         files = [f for f in files if '.yml' in f]
@@ -141,8 +145,9 @@ def run(test_plan):
 
 
 @main.command()
-def check():
-    for root, _, files in os.walk(QU_DIR):
+@click.pass_context
+def check(ctx):
+    for root, _, files in os.walk(ctx.obj['ROOT']):
         files = [f for f in files if '.report' in f]
         if len(files) == 0:
             continue
