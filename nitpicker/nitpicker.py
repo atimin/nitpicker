@@ -35,10 +35,15 @@ def main(ctx, root):
 
 @main.command()
 @click.argument('test_case_name')
-@click.option('--plan', '-p', type=str, default='')
-@click.option('--force', '-f', type=bool, default=False, is_flag=True)
+@click.option('--plan', '-p', type=str, default='',
+              help='Chose the test plane in the plan tree separated by dot. Example: feature_1.plan_2')
+@click.option('--force', '-f', type=bool, default=False, is_flag=True,
+              help='Replace the old test case with a new one, if it has the same name.')
 @click.pass_context
 def add(ctx, test_case_name, plan, force):
+    """
+    Add a new test case to a plan.
+    """
     case_dir = os.path.join(*([ctx.obj['ROOT']] + plan.split('.')))
     case_file_path = os.path.join(case_dir, test_case_name + '.yml')
 
