@@ -3,6 +3,9 @@ Nitpicker
 
 Nitpicker is a CLI tool for QA written in Python
 
+.. image:: https://travis-ci.org/flipback/nitpicker.svg?branch=master
+    :target: https://travis-ci.org/flipback/nitpicker
+
 
 Motivation
 ........................
