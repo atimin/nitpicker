@@ -55,7 +55,7 @@ Nitpicker provides command to create a test case:
 
 ::
 
-    python nitpicker.py add test_case -p feature_1.plan_1
+    python -m nitpicker add test_case -p feature_1.plan_1
 
 Then you should write the case by using your favourite text editor.
 It is a not bad idea to commit and push it, so your teammate can
@@ -65,7 +65,7 @@ Now you can run the test plan:
 
 ::
 
-    python nitpicker.py run feature_1.plan_1
+    python -m nitpicker run feature_1.plan_1
 
 The program runs all the cases in interactive mode leading the
 tester step by step. The results of the run will be written in
@@ -77,7 +77,7 @@ repo to a CI server can check if all tests are passed
 
 ::
 
-    python nitpicker.py check
+    python -m nitpicker check
     
 
 The project uses itself for testing. You can find *qa* directory in the repo.
