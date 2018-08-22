@@ -110,12 +110,13 @@ def run(ctx, test_plan):
 
         for f in files:
             data = yaml.load(open(os.path.join(root, f)))
-            answer = input('Start test {} - {}? [Y/n]'.format(f, data['description'])).strip()
+            click.echo('Start test {} - {}? [Y/n]'.format(f, data['description']))
 
             report['cases'][f] = dict()
             report['cases'][f]['description'] = data['description']
             report['cases'][f]['started'] = helpers.get_current_time_as_str()
 
+            answer = click.getchar()
             if answer == 'n':
                 click.secho('SKIPPED', fg='yellow')
                 report['cases'][f]['status'] = 'skipped'
@@ -126,8 +127,10 @@ def run(ctx, test_plan):
             step = 0
             for action, reaction in zip(data['actions'], data['reactions']):
                 step += 1
-                answer = input('Step {}: \n ACTION: {} \n REACTION: {}\n Is OK? [Y/n]'
-                               .format(step, action, reaction)).strip()
+                click.echo('Step {}: \n ACTION: {} \n REACTION: {}\n Is it OK? [Y/n]'
+                               .format(step, action, reaction))
+
+                answer = click.getchar()
                 if answer == 'n':
                     click.secho('FAILED', fg='red')
 
