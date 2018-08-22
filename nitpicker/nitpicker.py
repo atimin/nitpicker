@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+
 import click
 import os
-import time
 import yaml
-import termcolor
+import helpers
 
 
 TEST_CASE_TEMPLATE = '''
@@ -55,7 +55,7 @@ def add(ctx, test_case_name, plan, force):
         exit(1)
 
     data = dict()
-    data['created'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+    data['created'] = helpers.get_current_time_as_str()
     data['author'] = 'Unknown'
     data['description'] = ''
 
@@ -70,29 +70,33 @@ def list(ctx):
     def calc_plans(path):
         count = 0
         for _, dirs_, files_ in os.walk(path):
+            files_ = [f for f in files_ if '.yml' in f]
             count += len(files_)
 
         return count
 
-    print('You project has {} test cases'.format(calc_plans(ctx.obj['ROOT'])))
+    click.echo('You project has {} test cases'.format(calc_plans(ctx.obj['ROOT'])))
     for root, dirs, files in os.walk(ctx.obj['ROOT']):
-        if not root == ctx['ROOT']:
+        if not root == ctx.obj['ROOT']:
             level = root.replace(ctx.obj['ROOT'], '').count(os.sep) - 1
             indent = ' '*2*level
             subindent: str = ' '*2*(level + 1)
 
             files = [f for f in files if '.yml' in f]
-            print('{}Plan "{}" has {} cases:'.format(indent, os.path.basename(root), calc_plans(root)))
+            click.echo('{}Plan "{}" has {} cases:'.format(indent, os.path.basename(root), calc_plans(root)))
 
             for f in files:
                 data = yaml.load(open(os.path.join(root, f)))
-                print('{}{} - {}'.format(subindent, f[0:-4], data['description'] if 'description' in data else ''))
+                click.echo('{}{} - {}'.format(subindent, f[0:-4], data['description'] if 'description' in data else ''))
 
 
 @main.command()
 @click.argument('test_plan')
 @click.pass_context
 def run(ctx, test_plan):
+    """
+    Run a test plan in the plan tree separated by dot
+    """
     case_dir = os.path.join(*([ctx.obj['ROOT']] + test_plan.split('.')))
 
     for root, _, files in os.walk(case_dir):
@@ -101,7 +105,7 @@ def run(ctx, test_plan):
             continue
 
         report = dict()
-        report['started'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+        report['started'] = helpers.get_current_time_as_str()
         report['cases'] = dict()
 
         for f in files:
@@ -110,14 +114,14 @@ def run(ctx, test_plan):
 
             report['cases'][f] = dict()
             report['cases'][f]['description'] = data['description']
-            report['cases'][f]['started'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+            report['cases'][f]['started'] = helpers.get_current_time_as_str()
 
             if answer == 'n':
-                print(termcolor.colored('SKIPPED', 'yellow'))
+                click.secho('SKIPPED', fg='yellow')
                 report['cases'][f]['status'] = 'skipped'
                 continue
 
-            print('You should do this before run the case: \n {} \n '.format('\n'.join(data['setup'])))
+            click.echo('You should do this before run the case: \n {} \n '.format('\n'.join(data['setup'])))
 
             step = 0
             for action, reaction in zip(data['actions'], data['reactions']):
@@ -125,27 +129,28 @@ def run(ctx, test_plan):
                 answer = input('Step {}: \n ACTION: {} \n REACTION: {}\n Is OK? [Y/n]'
                                .format(step, action, reaction)).strip()
                 if answer == 'n':
-                    print(termcolor.colored('FAILED', 'red'))
+                    click.secho('FAILED', fg='red')
+
                     report['cases'][f]['status'] = 'failed'
                     report['cases'][f]['failed_step'] = step
                     report['cases'][f]['failed_action'] = action
                     report['cases'][f]['failed_reaction'] = reaction
-                    report['cases'][f]['finished'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+                    report['cases'][f]['finished'] = helpers.get_current_time_as_str()
                     break
                 else:
-                    print(termcolor.colored('PASSED', 'green'))
+                    click.secho('PASSED', fg='green')
 
             if 'status' not in report['cases'][f]:
                 report['cases'][f]['status'] = 'passed'
-                report['cases'][f]['finished'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+                report['cases'][f]['finished'] = helpers.get_current_time_as_str()
 
-        report['finished'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+        report['finished'] = helpers.get_current_time_as_str()
 
         run_dir = os.path.join(root, 'runs')
         if not os.path.exists(run_dir):
             os.makedirs(run_dir)
 
-        report_file = open(os.path.join(run_dir, time.strftime("%Y%m%d_%H%M%S", time.gmtime())) + '_run.report', 'w')
+        report_file = open(os.path.join(run_dir, helpers.get_current_time_as_str() + '_run.report'), 'w')
         yaml.dump(report, report_file, default_flow_style=False)
 
 
@@ -162,7 +167,7 @@ def check(ctx):
 
         for file, case in report['cases'].items():
             if case['status'] == 'failed':
-                print(termcolor.colored('{} ({}) is failed'.format(file, case['description']), 'red'))
+                click.secho('{} ({}) is failed'.format(file, case['description']), fg='red')
                 exit(1)
 
 
