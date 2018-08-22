@@ -18,6 +18,7 @@ setup(
     author_email='atimin@gmail.com',
     url='https://github.com/flipback/nitpicker',
     license=license,
-    packages=find_packages(exclude=('tests', 'docs'))
+    packages=find_packages(exclude=('tests', 'docs')),
+    python_requires='>=3.3'
 )
 
