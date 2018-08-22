@@ -1,0 +1,3 @@
+import nitpicker
+
+nitpicker.main()

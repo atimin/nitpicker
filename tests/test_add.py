@@ -51,5 +51,6 @@ class AddTestCase(unittest.TestCase):
 
         self.assertEqual(0, result.exit_code)
 
+
 if __name__ == '__main__':
     unittest.main()

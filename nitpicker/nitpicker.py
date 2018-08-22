@@ -3,7 +3,7 @@
 import click
 import os
 import yaml
-import helpers
+from nitpicker import helpers
 
 
 TEST_CASE_TEMPLATE = '''
@@ -80,7 +80,7 @@ def list(ctx):
         if not root == ctx.obj['ROOT']:
             level = root.replace(ctx.obj['ROOT'], '').count(os.sep) - 1
             indent = ' '*2*level
-            subindent: str = ' '*2*(level + 1)
+            subindent = ' '*2*(level + 1)
 
             files = [f for f in files if '.yml' in f]
             click.echo('{}Plan "{}" has {} cases:'.format(indent, os.path.basename(root), calc_plans(root)))
@@ -174,5 +174,3 @@ def check(ctx):
                 exit(1)
 
 
-if __name__ == "__main__":
-    main()
