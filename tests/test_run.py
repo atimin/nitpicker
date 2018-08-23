@@ -29,7 +29,7 @@ class RunTestCase(unittest.TestCase):
     def test_run_case_passed(self):
         result = self._runner.invoke(nitpicker.main,
                                      ['-r', TEST_DIR, 'run', 'feature_1.plan_1'],
-                                     catch_exceptions=False)
+                                     catch_exceptions=False, input='y\ny\n')
 
         self.assertEqual(0, result.exit_code)
         self.assertTrue('Step 1' in result.output)
@@ -38,7 +38,7 @@ class RunTestCase(unittest.TestCase):
     def test_run_case_skipped(self):
         result = self._runner.invoke(nitpicker.main,
                                      ['-r', TEST_DIR, 'run', 'feature_1.plan_1'],
-                                     catch_exceptions=False, input='n')
+                                     catch_exceptions=False, input='n\n')
 
         self.assertEqual(0, result.exit_code)
         self.assertFalse('Step 1' in result.output)
@@ -47,7 +47,7 @@ class RunTestCase(unittest.TestCase):
     def test_run_case_failed(self):
         result = self._runner.invoke(nitpicker.main,
                                      ['-r', TEST_DIR, 'run', 'feature_1.plan_1'],
-                                     catch_exceptions=False, input='yn')
+                                     catch_exceptions=False, input='y\nn\n')
 
         self.assertEqual(0, result.exit_code)
         self.assertTrue('Step 1' in result.output)
