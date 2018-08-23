@@ -3,6 +3,7 @@
 import click
 import os
 import yaml
+import time
 from nitpicker import helpers
 
 
@@ -116,7 +117,7 @@ def run(ctx, test_plan):
             report['cases'][f]['description'] = data['description']
             report['cases'][f]['started'] = helpers.get_current_time_as_str()
 
-            answer = click.getchar()
+            answer = input().strip().lower()
             if answer == 'n':
                 click.secho('SKIPPED', fg='yellow')
                 report['cases'][f]['status'] = 'skipped'
@@ -130,7 +131,7 @@ def run(ctx, test_plan):
                 click.echo('Step {}: \n ACTION: {} \n REACTION: {}\n Is it OK? [Y/n]'
                                .format(step, action, reaction))
 
-                answer = click.getchar()
+                answer = input().strip().lower()
                 if answer == 'n':
                     click.secho('FAILED', fg='red')
 
@@ -153,7 +154,7 @@ def run(ctx, test_plan):
         if not os.path.exists(run_dir):
             os.makedirs(run_dir)
 
-        report_file = open(os.path.join(run_dir, helpers.get_current_time_as_str() + '_run.report'), 'w')
+        report_file = open(os.path.join(run_dir, time.strftime("%Y%m%d%H%M%S", time.gmtime()) + '_run.report'), 'w')
         yaml.dump(report, report_file, default_flow_style=False)
 
 
@@ -172,5 +173,3 @@ def check(ctx):
             if case['status'] == 'failed':
                 click.secho('{} ({}) is failed'.format(file, case['description']), fg='red')
                 exit(1)
-
-
