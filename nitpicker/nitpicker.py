@@ -69,8 +69,6 @@ def add(ctx, test_case_name, plan, force):
     f.write(text)
 
 
-
-
 @main.command()
 @click.pass_context
 def list(ctx):
