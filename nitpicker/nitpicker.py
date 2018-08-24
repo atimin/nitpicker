@@ -22,22 +22,23 @@ reactions:
 - Reaction 2
 teardown:
 - Do something to stop
-
 '''
 
 
 @click.group()
 @click.option('--root', '-r', type=str, default='qa')
+@click.option('--no-editor', type=bool, default=False, is_flag=True)
 @click.pass_context
-def main(ctx, root):
+def main(ctx, root, no_editor):
     ctx.obj = dict()
     ctx.obj['ROOT'] = root
+    ctx.obj['NO_EDITOR'] = no_editor
 
 
 @main.command()
 @click.argument('test_case_name')
 @click.option('--plan', '-p', type=str, default='',
-              help='Chose the test plane in the plan tree separated by dot. Example: feature_1.plan_2')
+              help='Select the test plane in the plan tree separated by dot. Example: feature_1.plan_2')
 @click.option('--force', '-f', type=bool, default=False, is_flag=True,
               help='Replace the old test case with a new one, if it has the same name.')
 @click.pass_context
@@ -60,8 +61,14 @@ def add(ctx, test_case_name, plan, force):
     data['author'] = 'Unknown'
     data['description'] = ''
 
+    text = TEST_CASE_TEMPLATE.format(**data)
+    if not ctx.obj['NO_EDITOR']:
+        text = click.edit(text, extension='.yml')
+
     f = open(case_file_path, 'w')
-    f.write(TEST_CASE_TEMPLATE.format(**data))
+    f.write(text)
+
+
 
 
 @main.command()

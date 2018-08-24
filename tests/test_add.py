@@ -22,31 +22,33 @@ class AddTestCase(unittest.TestCase):
 
     def test_create_new_case(self):
         result = self._runner.invoke(nitpicker.main,
-                                     ['-r', TEST_DIR, 'add', 'new_case', '-p', 'feature_1.plan_1'],
+                                     ['-r', TEST_DIR, '--no-editor', 'add', 'new_case', '-p', 'feature_1.plan_1'],
                                      catch_exceptions=False)
 
         case_file_path = os.path.join(TEST_DIR, 'feature_1', 'plan_1', 'new_case.yml')
         self.assertEqual(0, result.exit_code)
         self.assertTrue(os.path.exists(case_file_path))
-        self.assertTrue(yaml.load(open(case_file_path, 'r')))
+
+        with open(case_file_path, 'r') as f:
+            self.assertTrue(yaml.load(f))
 
     def test_not_create_new_case_if_it_exists(self):
         self._runner.invoke(nitpicker.main,
-                            ['-r', TEST_DIR, 'add', 'new_case', '-p', 'feature_1.plan_1'],
+                            ['-r', TEST_DIR, '--no-editor', 'add', 'new_case', '-p', 'feature_1.plan_1'],
                             catch_exceptions=False)
 
         result = self._runner.invoke(nitpicker.main,
-                                     ['-r', TEST_DIR, 'add', 'new_case', '-p', 'feature_1.plan_1'],
+                                     ['-r', TEST_DIR, '--no-editor', 'add', 'new_case', '-p', 'feature_1.plan_1'],
                                      catch_exceptions=False)
         self.assertEqual(1, result.exit_code)
 
     def test_rewrite_case_with_force_flag(self):
         self._runner.invoke(nitpicker.main,
-                            ['-r', TEST_DIR, 'add', 'new_case', '-p', 'feature_1.plan_1'],
+                            ['-r', TEST_DIR, '--no-editor', 'add', 'new_case', '-p', 'feature_1.plan_1'],
                             catch_exceptions=False)
 
         result = self._runner.invoke(nitpicker.main,
-                                     ['-r', TEST_DIR, 'add', 'new_case', '-p', 'feature_1.plan_1', '-f'],
+                                     ['-r', TEST_DIR, '--no-editor', 'add', 'new_case', '-p', 'feature_1.plan_1', '-f'],
                                      catch_exceptions=False)
 
         self.assertEqual(0, result.exit_code)
