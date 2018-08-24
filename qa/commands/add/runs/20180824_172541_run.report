@@ -1,0 +1,13 @@
+cases:
+  add_new_case.yml:
+    description: Add a new case
+    finished: '2018-08-24 17:23:52'
+    started: '2018-08-24 17:22:31'
+    status: passed
+  add_new_case_in_force.yml:
+    description: Add a new case in force mode
+    finished: '2018-08-24 17:25:41'
+    started: '2018-08-24 17:23:52'
+    status: passed
+finished: '2018-08-24 17:25:41'
+started: '2018-08-24 17:22:31'

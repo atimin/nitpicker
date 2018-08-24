@@ -1,0 +1,17 @@
+created: 2018-08-24 16:57:47
+author: Aleksey Timin
+description: Add a new case in force mode
+tags: comamnds
+setup:
+- Run command 'python -m nitpicker -r test_qa add test_test_case -p commands'
+- Type something in the opened editor
+- Save the case
+- Close the editor
+actions:
+- Run command 'python -m nitpicker -r test_qa add test_test_case -p commands -f'
+- Save the case and close the editor
+reactions:
+- The new case should be opened in the editor
+- The case should be overwriten
+teardown:
+- Delete test_qa directory

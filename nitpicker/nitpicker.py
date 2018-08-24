@@ -161,7 +161,7 @@ def run(ctx, test_plan):
         if not os.path.exists(run_dir):
             os.makedirs(run_dir)
 
-        report_file = open(os.path.join(run_dir, time.strftime("%Y%m%d%H%M%S", time.gmtime()) + '_run.report'), 'w')
+        report_file = open(os.path.join(run_dir, time.strftime("%Y%m%d_%H%M%S", time.gmtime()) + '_run.report'), 'w')
         yaml.dump(report, report_file, default_flow_style=False)
 
 
