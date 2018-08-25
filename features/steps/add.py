@@ -3,7 +3,8 @@ import os
 import shutil
 import nitpicker
 from click.testing import CliRunner
-
+import yaml
+import pydoc
 
 @given('the test QA directory is empty')
 def step_impl(context):
@@ -53,9 +54,20 @@ def step_impl(context, test_case, path):
     case_file_path = os.path.join(*path)
     assert os.path.exists(case_file_path)
 
+    context.case_file_path = case_file_path
+
 
 @then('a new case is not created')
 def step_impl(context):
     result = context.runner.invoke(nitpicker.main, context.command, catch_exceptions=False)
     assert 1 == result.exit_code
+
+
+@then('has "{yaml_field}" of {yaml_field_type}')
+def step_impl(context, yaml_field, yaml_field_type):
+    data = yaml.load(open(context.case_file_path))
+
+    print(type(data[yaml_field]), yaml_field_type)
+    assert type(data[yaml_field]) == pydoc.locate(yaml_field_type)
+
 

@@ -19,8 +19,26 @@ Feature: Adding a new case
         And flag -f is added
         Then a new case "<case>.yml" is created in "<plan_path>"
 
-    Examples: Cases
+    Examples: NewCases
     | case               | plan                     | plan_path                 |
     | test_test_case1    | feature_1.plan_1         | feature_1                 |
     | test_test_case2    | feature_1.plan_1         | feature_1/plan_1          |
     | test_test_case2    | feature_2.plan_1.subplan | feature_2/plan_1/subplan  |
+
+    Scenario Outline: Add a new case in YAML format
+        Given the test QA directory is empty
+        When we input command "add test_test_case1"
+        And option -p is set with "feature_1"
+        Then a new case "test_test_case1.yml" is created in "feature_1"
+        And has "<yaml_field>" of <yaml_field_type>
+
+    Examples: YmlField
+    | yaml_field |  yaml_field_type     |
+    | created    |  datetime.datetime   |
+    | author     |  str                 |
+    | setup      |  list                |
+    | actions    |  list                |
+    | reactions  |  list                |
+    | teardown   |  list                |
+
+
