@@ -4,24 +4,23 @@ import shutil
 import nitpicker
 from click.testing import CliRunner
 
-TEST_DIR = os.path.join(os.path.dirname(__file__), 'test_qa')
-
 
 @given('the test QA directory is empty')
 def step_impl(context):
-    if os.path.exists(TEST_DIR):
-            shutil.rmtree(TEST_DIR)
+    if os.path.exists(context.test_dir):
+            shutil.rmtree(context.test_dir)
 
     context.runner = CliRunner()
-    context.command = ['-r', TEST_DIR, '--no-editor']
+    context.command = ['-r', context.test_dir, '--no-editor']
 
 
 @given('the test QA directory has already "{test_case}" in "{path}"')
 def step_impl(context, test_case, path):
     context.runner = CliRunner()
-    context.command = ['-r', TEST_DIR, '--no-editor']
+    context.command = ['-r', context.test_dir, '--no-editor']
 
-    plan_dir_path = os.path.join(TEST_DIR, *path.split('/'))
+    path = [context.test_dir] + path.split('/')
+    plan_dir_path = os.path.join(*path)
     if not os.path.exists(plan_dir_path):
         os.makedirs(plan_dir_path)
 
@@ -50,8 +49,8 @@ def step_impl(context, test_case, path):
     result = context.runner.invoke(nitpicker.main, context.command, catch_exceptions=False)
     assert 0 == result.exit_code
 
-    path = path.split('/')
-    case_file_path = os.path.join(TEST_DIR, *path, test_case)
+    path = [context.test_dir] + path.split('/') + [test_case]
+    case_file_path = os.path.join(*path)
     assert os.path.exists(case_file_path)
 
 
@@ -59,5 +58,4 @@ def step_impl(context, test_case, path):
 def step_impl(context):
     result = context.runner.invoke(nitpicker.main, context.command, catch_exceptions=False)
     assert 1 == result.exit_code
-
 
