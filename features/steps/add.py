@@ -2,24 +2,19 @@ from behave import *
 import os
 import shutil
 import nitpicker
-from click.testing import CliRunner
 import yaml
 import pydoc
+import features.common
+
 
 @given('the test QA directory is empty')
 def step_impl(context):
     if os.path.exists(context.test_dir):
             shutil.rmtree(context.test_dir)
 
-    context.runner = CliRunner()
-    context.command = ['-r', context.test_dir, '--no-editor']
-
 
 @given('the test QA directory has already "{test_case}" in "{path}"')
 def step_impl(context, test_case, path):
-    context.runner = CliRunner()
-    context.command = ['-r', context.test_dir, '--no-editor']
-
     path = [context.test_dir] + path.split('/')
     plan_dir_path = os.path.join(*path)
     if not os.path.exists(plan_dir_path):
@@ -27,12 +22,6 @@ def step_impl(context, test_case, path):
 
     with open(os.path.join(plan_dir_path, test_case + '.yml'), 'w') as f:
         f.write('Some content')
-
-
-@when('we input command "{command}"')
-def step_impl(context, command):
-    command = command.split(' ')
-    context.command += [command[0], command[1]]
 
 
 @when('option -{opt} is set with "{plan}"')
