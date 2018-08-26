@@ -94,8 +94,13 @@ def step_impl(context, comment, step_num, case_num):
 
 @then('we see message "{msg}"')
 def step_impl(context, msg):
-
     assert msg in context.result.output
+
+
+@then('we got QA report in root directory')
+def step_impl(context):
+    with open(os.path.join(context.test_dir, 'QA_REPORT.md')) as report_file:
+        assert len(report_file.read()) > 0
 
 
 def input_to_pass_case():
@@ -111,5 +116,3 @@ def input_to_fail_case_in_n_step(n, comment=''):
     keys[n*2] = 'n'
     keys = keys[:n*2+2] + list(comment + '\n') + keys[n*2+2:]
     return "".join(keys)
-
-

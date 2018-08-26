@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import yaml
 import mako.template
@@ -15,7 +17,7 @@ class ReportGenerator:
             os.path.join(os.path.dirname(__file__), 'REPORT_TEMPLATE.' + report_format))
         self.__format = report_format
 
-    def generate(self, root, report_name = 'QA_REPORT'):
+    def generate(self, root, report_name='QA_REPORT', report_dir=''):
         templ_dict = dict()
         templ_dict['header'] = 'QA Report'
         templ_dict['generated_at'] = helpers.get_current_time_as_str()
@@ -33,16 +35,21 @@ class ReportGenerator:
 
             for case_file in files:
                 case = dict()
-                case_yaml = yaml.load(open(os.path.join(root, case_file)))
+
+                with open(os.path.join(root, case_file), encoding='utf-8') as template_file:
+                    case_yaml = yaml.load(template_file)
 
                 run_count = 0
                 run_dir = os.path.join(root, 'runs')
                 last_run = None
                 if os.path.exists(run_dir):
                     for run_file in os.listdir(run_dir):
-                        run_yaml = yaml.load(open(os.path.join(run_dir, run_file)))
 
-                        if case_file in run_yaml['cases']:
+                        with open(os.path.join(run_dir, run_file), encoding='utf-8') as template_file:
+                            run_yaml = yaml.load(template_file)
+
+                        if case_file in run_yaml['cases'] \
+                                and not run_yaml['cases'][case_file]['status'] == 'skipped':
                             run_count = run_count + 1
                             last_run = run_yaml['cases'][case_file]['finished']
 
@@ -56,8 +63,9 @@ class ReportGenerator:
 
             templ_dict['plans'].append(plan)
 
-        templ = mako.template.Template(open(self.__template_path).read())
+        with open(self.__template_path, encoding='utf-8') as template_file:
+            templ = mako.template.Template(template_file.read())
 
-        report_file = open('.'.join([report_name, self.__format]), 'w')
-        report_file.write(templ.render(**templ_dict))
+        with open(os.path.join(report_dir, '.'.join([report_name, self.__format])), 'w', encoding='utf-8') as report_file:
+            report_file.write(templ.render(**templ_dict))
 
