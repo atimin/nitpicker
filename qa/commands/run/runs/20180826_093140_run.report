@@ -1,0 +1,8 @@
+cases:
+  run_test_plan.yml:
+    description: Run a test plan and pass all tests
+    finished: '2018-08-26 09:31:40'
+    started: '2018-08-26 09:31:23'
+    status: passed
+finished: '2018-08-26 09:31:40'
+started: '2018-08-26 09:31:23'

@@ -5,6 +5,7 @@ import os
 import yaml
 import time
 from nitpicker import helpers
+from nitpicker.report_generator.generator import ReportGenerator
 
 
 TEST_CASE_TEMPLATE = '''
@@ -22,22 +23,24 @@ reactions:
 - Reaction 2
 teardown:
 - Do something to stop
-
 '''
 
 
 @click.group()
 @click.option('--root', '-r', type=str, default='qa')
+@click.option('--no-editor', type=bool, default=False, is_flag=True)
+@click.option('--report-dir', default='')
 @click.pass_context
-def main(ctx, root):
+def main(ctx, root, no_editor, report_dir):
     ctx.obj = dict()
     ctx.obj['ROOT'] = root
-
+    ctx.obj['NO_EDITOR'] = no_editor
+    ctx.obj['REPORT_DIR'] = report_dir
 
 @main.command()
 @click.argument('test_case_name')
 @click.option('--plan', '-p', type=str, default='',
-              help='Chose the test plane in the plan tree separated by dot. Example: feature_1.plan_2')
+              help='Select the test plane in the plan tree separated by dot. Example: feature_1.plan_2')
 @click.option('--force', '-f', type=bool, default=False, is_flag=True,
               help='Replace the old test case with a new one, if it has the same name.')
 @click.pass_context
@@ -60,8 +63,12 @@ def add(ctx, test_case_name, plan, force):
     data['author'] = 'Unknown'
     data['description'] = ''
 
+    text = TEST_CASE_TEMPLATE.format(**data)
+    if not ctx.obj['NO_EDITOR']:
+        text = click.edit(text, extension='.yml')
+
     f = open(case_file_path, 'w')
-    f.write(TEST_CASE_TEMPLATE.format(**data))
+    f.write(text)
 
 
 @main.command()
@@ -87,7 +94,7 @@ def list(ctx):
             click.echo('{}Plan "{}" has {} cases:'.format(indent, os.path.basename(root), calc_plans(root)))
 
             for f in files:
-                data = yaml.load(open(os.path.join(root, f)))
+                data = yaml.load(open(os.path.join(root, f), encoding='utf-8'))
                 click.echo('{}{} - {}'.format(subindent, f[0:-4], data['description'] if 'description' in data else ''))
 
 
@@ -110,7 +117,9 @@ def run(ctx, test_plan):
         report['cases'] = dict()
 
         for f in files:
-            data = yaml.load(open(os.path.join(root, f)))
+            with open(os.path.join(root, f), encoding='utf-8') as case_file:
+                data = yaml.load(case_file)
+
             click.echo('Start test {} - {}? [Y/n]'.format(f, data['description']))
 
             report['cases'][f] = dict()
@@ -134,7 +143,7 @@ def run(ctx, test_plan):
                 answer = input().strip().lower()
                 if answer == 'n':
                     click.secho('FAILED', fg='red')
-
+                    report['cases'][f]['comment'] = input('Comment please the failed step.').strip()
                     report['cases'][f]['status'] = 'failed'
                     report['cases'][f]['failed_step'] = step
                     report['cases'][f]['failed_action'] = action
@@ -154,8 +163,11 @@ def run(ctx, test_plan):
         if not os.path.exists(run_dir):
             os.makedirs(run_dir)
 
-        report_file = open(os.path.join(run_dir, time.strftime("%Y%m%d%H%M%S", time.gmtime()) + '_run.report'), 'w')
-        yaml.dump(report, report_file, default_flow_style=False)
+        with open(os.path.join(run_dir, time.strftime("%Y%m%d_%H%M%S", time.gmtime()) + '_run.report'),
+                  'w', encoding='utf-8') as report_file:
+            yaml.dump(report, report_file, default_flow_style=False)
+
+        ReportGenerator('md').generate(ctx.obj['ROOT'], report_dir=ctx.obj['REPORT_DIR'])
 
 
 @main.command()
@@ -166,7 +178,7 @@ def check(ctx):
         if len(files) == 0:
             continue
 
-        last_report_file = open(os.path.join(root, sorted(files)[-1]))
+        last_report_file = open(os.path.join(root, sorted(files)[-1]), encoding='utf-8')
         report = yaml.load(last_report_file)
 
         for file, case in report['cases'].items():

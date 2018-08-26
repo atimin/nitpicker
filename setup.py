@@ -20,8 +20,8 @@ setup(
     install_requires=[
         'click>=6.7',
         'colorama>=0.3.9',
-        'pyyaml>=3.13'
-
+        'pyyaml>=3.13',
+        'mako>=1.0'
     ],
 )
 

@@ -3,3 +3,5 @@ click>=6.7
 pyyaml
 nose2
 colorama
+behave
+mako>=1.0
