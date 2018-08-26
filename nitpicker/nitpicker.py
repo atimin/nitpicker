@@ -5,6 +5,7 @@ import os
 import yaml
 import time
 from nitpicker import helpers
+from nitpicker.report_generator.generator import ReportGenerator
 
 
 TEST_CASE_TEMPLATE = '''
@@ -161,6 +162,8 @@ def run(ctx, test_plan):
 
         report_file = open(os.path.join(run_dir, time.strftime("%Y%m%d_%H%M%S", time.gmtime()) + '_run.report'), 'w')
         yaml.dump(report, report_file, default_flow_style=False)
+
+        ReportGenerator(report_format='md').generate(ctx.obj['ROOT'])
 
 
 @main.command()

@@ -1,0 +1,1 @@
+from nitpicker.report_generator.generator import ReportGenerator
