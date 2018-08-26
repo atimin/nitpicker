@@ -1,3 +1,7 @@
+Release 0.1.3
+---------------------------------
+* Fix PyPi distribution:
+
 Release 0.1.0
 ---------------------------------
 * #1 Report generation about test runs in MD format (@flipback)
