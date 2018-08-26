@@ -1,4 +1,4 @@
-Release 0.1.0-dev
+Release 0.1.0
 ---------------------------------
 * #1 Report generation about test runs in MD format (@flipback)
 * #7 A user can comment the failed step (@flipback)
