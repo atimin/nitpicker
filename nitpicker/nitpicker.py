@@ -74,28 +74,31 @@ def add(ctx, test_case_name, plan, force):
 @click.pass_context
 def list(ctx):
 
-    def calc_plans(path):
+    def calc_plans(path, target):
         count = 0
         for _, dirs_, files_ in os.walk(path):
-            files_ = [f for f in files_ if '.yml' in f]
+            files_ = [f for f in files_ if target in f]
             count += len(files_)
 
         return count
 
-    click.echo('You project has {} test cases'.format(calc_plans(ctx.obj['ROOT'])))
+    def show_dir(files, target):
+            files_ = [f for f in files if target in f]
+            if len(files_) > 0:
+                click.echo('{}Plan "{}" has {} cases:'.format(indent, os.path.basename(root), calc_plans(root, target)))
+                for f in files_:
+                    data = yaml.load(open(os.path.join(root, f)))
+                    click.echo('{}{} - {}'.format(subindent, f[0:-4], data['description'] if 'description' in data else ''))
+
+    click.echo('You project has {} test cases'.format(calc_plans(ctx.obj['ROOT'], '.yml')))
     for root, dirs, files in os.walk(ctx.obj['ROOT']):
         if not root == ctx.obj['ROOT']:
             level = root.replace(ctx.obj['ROOT'], '').count(os.sep) - 1
             indent = ' '*2*level
             subindent = ' '*2*(level + 1)
 
-            files = [f for f in files if '.yml' in f]
-            click.echo('{}Plan "{}" has {} cases:'.format(indent, os.path.basename(root), calc_plans(root)))
-
-            for f in files:
-                data = yaml.load(open(os.path.join(root, f)))
-                click.echo('{}{} - {}'.format(subindent, f[0:-4], data['description'] if 'description' in data else ''))
-
+            show_dir(files, '.yml')
+            show_dir(files, '.report')
 
 @main.command()
 @click.argument('test_plan')
