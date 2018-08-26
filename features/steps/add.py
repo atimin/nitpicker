@@ -55,8 +55,6 @@ def step_impl(context):
 @then('has "{yaml_field}" of {yaml_field_type}')
 def step_impl(context, yaml_field, yaml_field_type):
     data = yaml.load(open(context.case_file_path))
-
-    print(type(data[yaml_field]), yaml_field_type)
     assert type(data[yaml_field]) == pydoc.locate(yaml_field_type)
 
 

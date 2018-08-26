@@ -139,7 +139,7 @@ def run(ctx, test_plan):
                 answer = input().strip().lower()
                 if answer == 'n':
                     click.secho('FAILED', fg='red')
-
+                    report['cases'][f]['comment'] = input('Comment please the failed step.').strip()
                     report['cases'][f]['status'] = 'failed'
                     report['cases'][f]['failed_step'] = step
                     report['cases'][f]['failed_action'] = action

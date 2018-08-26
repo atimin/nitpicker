@@ -8,7 +8,7 @@ import features.common
 @given('there is "{test_plan}" with {num} cases')
 def step_impl(context, test_plan, num):
     num = int(num)
-    for i in range(num):
+    for i in range(1, num+1):
         context.runner.invoke(nitpicker.main,
                               context.command + ['add', 'new_case_' + str(i), '-p', test_plan],
                               catch_exceptions=False)
@@ -18,7 +18,7 @@ def step_impl(context, test_plan, num):
 
 @when('pass all steps of all cases')
 def step_impl(context):
-    y_pressed = keys_to_pass_case() * context.num_cases
+    y_pressed = input_to_pass_case() * context.num_cases
     result = context.runner.invoke(nitpicker.main,
                                    context.command,
                                    catch_exceptions=False, input=y_pressed)
@@ -29,10 +29,10 @@ def step_impl(context):
 
 @when('skip a case')
 def step_impl(context):
-    y_pressed = keys_to_skip_case() + keys_to_pass_case()
+    input_with_skipped_case = input_to_skip_case() + input_to_pass_case()
     result = context.runner.invoke(nitpicker.main,
                                    context.command,
-                                   catch_exceptions=False, input=y_pressed)
+                                   catch_exceptions=False, input=input_with_skipped_case)
 
     assert 0 == result.exit_code
     context.result = result
@@ -40,17 +40,17 @@ def step_impl(context):
 
 @when('fail {step_num} step of {case_num} case')
 def step_impl(context, step_num, case_num):
-    y_pressed = [keys_to_pass_case(), keys_to_skip_case()]
-    y_pressed[int(case_num)] = keys_to_fail_case_in_n_step(int(step_num))
+    input_with_failed_step = [input_to_pass_case(), input_to_skip_case()]
+    input_with_failed_step[int(case_num)-1] = input_to_fail_case_in_n_step(int(step_num))
     result = context.runner.invoke(nitpicker.main,
                                    context.command,
-                                   catch_exceptions=False, input="".join(y_pressed))
+                                   catch_exceptions=False, input="".join(input_with_failed_step))
 
     assert 0 == result.exit_code
     context.result = result
 
 
-@then('I got a report in "{report_dir}"')
+@then('we got a report in "{report_dir}"')
 def step_impl(context, report_dir):
     report_dir = os.path.join(*([context.test_dir] + report_dir.split('/')))
 
@@ -58,36 +58,58 @@ def step_impl(context, report_dir):
     context.report = yaml.load(open(os.path.join(report_dir, report_path)))
 
 
-@then('it has {num} case(s) {status}')
+@then('the report has {num} case(s) {status}')
 def step_impl(context, num, status):
     assert int(num) == sum(1 for _, report in context.report['cases'].items() if report['status'] == status)
 
 
 @when('pass a steps of a case')
 def step_impl(context):
-    y_pressed = 'y\ny\n\^C'
+    input_with_interruption = 'y\ny\n\^C'
     result = context.runner.invoke(nitpicker.main,
                                    context.command,
-                                   catch_exceptions=False, input=y_pressed)
+                                   catch_exceptions=False, input=input_with_interruption)
     context.result = result
 
 
-@then('I see message "{msg}"')
+@when('fail {step_num} step of {case_num} case with comment "{comment}"')
+def step_impl(context, step_num, case_num, comment):
+    input_with_failed_step = [input_to_pass_case(), input_to_pass_case()]
+    input_with_failed_step[int(case_num)-1] = input_to_fail_case_in_n_step(int(step_num), comment)
+    result = context.runner.invoke(nitpicker.main,
+                                   context.command,
+                                   catch_exceptions=False, input="".join(input_with_failed_step))
+
+    assert 0 == result.exit_code
+    context.result = result
+
+
+@then('the report has comment "{comment}" in {step_num} step of {case_num} case')
+def step_impl(context, comment, step_num, case_num):
+    case = context.report['cases']['new_case_' + case_num + '.yml']
+
+    assert case['failed_step'] == int(step_num)
+    assert case['comment'] == comment
+
+
+@then('we see message "{msg}"')
 def step_impl(context, msg):
+
     assert msg in context.result.output
 
 
-def keys_to_pass_case():
+def input_to_pass_case():
     return 'y\ny\ny\n'
 
 
-def keys_to_skip_case():
+def input_to_skip_case():
     return 'n\ny\ny\n'
 
 
-def keys_to_fail_case_in_n_step(n):
+def input_to_fail_case_in_n_step(n, comment=''):
     keys = list('y\ny\ny\n')
     keys[n*2] = 'n'
+    keys = keys[:n*2+2] + list(comment + '\n') + keys[n*2+2:]
     return "".join(keys)
 
 
