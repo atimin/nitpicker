@@ -5,12 +5,14 @@ import os
 import yaml
 import time
 from nitpicker import helpers
-from nitpicker.report_generator.generator import ReportGenerator
+from nitpicker.report_generator import ReportGenerator
+from nitpicker.cvs import CVSFactory
 
 
 TEST_CASE_TEMPLATE = '''
 created: {created}
-author: {author}
+author: {author_name}
+email: {author_email}
 description: {description}
 tags:
 setup:
@@ -36,6 +38,8 @@ def main(ctx, root, no_editor, report_dir):
     ctx.obj['ROOT'] = root
     ctx.obj['NO_EDITOR'] = no_editor
     ctx.obj['REPORT_DIR'] = report_dir
+    ctx.obj['CVS_ADAPTER'] = CVSFactory().create_cvs_adapter()
+
 
 @main.command()
 @click.argument('test_case_name')
@@ -60,15 +64,17 @@ def add(ctx, test_case_name, plan, force):
 
     data = dict()
     data['created'] = helpers.get_current_time_as_str()
-    data['author'] = 'Unknown'
+    data['author_name'] = ctx.obj['CVS_ADAPTER'].get_user_name()
+    data['author_email'] = ctx.obj['CVS_ADAPTER'].get_user_email()
     data['description'] = ''
 
     text = TEST_CASE_TEMPLATE.format(**data)
     if not ctx.obj['NO_EDITOR']:
-        text = click.edit(text, extension='.yml')
+        text = click.edit(text, extension='.yml', )
 
-    f = open(case_file_path, 'w')
-    f.write(text)
+    if text:
+        f = open(case_file_path, 'w')
+        f.write(text)
 
 
 @main.command()
@@ -114,6 +120,8 @@ def run(ctx, test_plan):
 
         report = dict()
         report['started'] = helpers.get_current_time_as_str()
+        report['tester_name'] = ctx.obj['CVS_ADAPTER'].get_user_name()
+        report['tester_email'] = ctx.obj['CVS_ADAPTER'].get_user_email()
         report['cases'] = dict()
 
         for f in files:
@@ -185,3 +193,4 @@ def check(ctx):
             if case['status'] == 'failed':
                 click.secho('{} ({}) is failed'.format(file, case['description']), fg='red')
                 exit(1)
+
