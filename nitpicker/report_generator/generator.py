@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import os
 import yaml
 import mako.template
@@ -11,6 +10,8 @@ class ReportGenerator:
     Represents the report generator which finds test cases and run reports in
     QA directory and builds a report in the given format.
     Supported formats: only Markdown
+    :param report_format The format of the report. Supported only 'md'
+    :raise: Exception if format is not supported
     """
     SUPPORTED_FORMATS = ['md']
 

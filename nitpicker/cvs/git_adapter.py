@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
 from .cvs_adapter import CVSAdapter
 import git.cmd
 
 
 class GitAdapter(CVSAdapter):
+    """
+    Implements a cvs adapter for git repository.
+    """
 
     def __init__(self):
         self.__repo = git.Repo('.')
