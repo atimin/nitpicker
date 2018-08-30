@@ -1,6 +1,10 @@
+Release 0.1.4
+---------------------------------
+* Fix UTF-8 bug in YAML dumping (@flipback)
+
 Release 0.1.3
 ---------------------------------
-* Fix PyPi distribution:
+* Fix PyPi distribution (@flipback)
 
 Release 0.1.0
 ---------------------------------
@@ -10,6 +14,5 @@ Release 0.1.0
 
 Release 0.0.3
 ---------------------------------
-
 * Fix input on Windows (@flipback)
 * Fix saving a report at the end of command *add* (@flipback)

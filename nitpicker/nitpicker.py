@@ -165,7 +165,7 @@ def run(ctx, test_plan):
 
         with open(os.path.join(run_dir, time.strftime("%Y%m%d_%H%M%S", time.gmtime()) + '_run.report'),
                   'w', encoding='utf-8') as report_file:
-            yaml.dump(report, report_file, default_flow_style=False)
+            yaml.dump(report, report_file, default_flow_style=False, allow_unicode=True)
 
         ReportGenerator('md').generate(ctx.obj['ROOT'], report_dir=ctx.obj['REPORT_DIR'])
 
