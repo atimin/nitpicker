@@ -86,9 +86,7 @@ def list(ctx):
             files_ = [f for f in files if target in f]
             if len(files_) > 0:
                 click.echo('{}Plan "{}" has {} cases:'.format(indent, os.path.basename(root), calc_plans(root, target)))
-                for f in files_:
-                    data = yaml.load(open(os.path.join(root, f)))
-                    click.echo('{}{} - {}'.format(subindent, f[0:-4], data['description'] if 'description' in data else ''))
+            return files_
 
     click.echo('You project has {} test cases'.format(calc_plans(ctx.obj['ROOT'], '.yml')))
     for root, dirs, files in os.walk(ctx.obj['ROOT']):
@@ -97,7 +95,9 @@ def list(ctx):
             indent = ' '*2*level
             subindent = ' '*2*(level + 1)
 
-            show_dir(files, '.yml')
+            for f in show_dir(files, '.yml'):
+                data = yaml.load(open(os.path.join(root, f)))
+                click.echo('{}{} - {}'.format(subindent, f[0:-4], data['description'] if 'description' in data else ''))
             show_dir(files, '.report')
 
 @main.command()
