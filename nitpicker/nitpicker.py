@@ -6,22 +6,22 @@ import yaml
 import time
 import codecs
 from nitpicker import helpers
-from nitpicker.report_generator.generator import ReportGenerator
+from nitpicker.report_generator import ReportGenerator
+from nitpicker.cvs import CVSFactory
 
 
 TEST_CASE_TEMPLATE = '''
 created: {created}
-author: {author}
+author: {author_name}
+email: {author_email}
 description: {description}
 tags:
 setup:
 - Do something to start
-actions:
-- Action 1
-- Action 2
-reactions:
-- Reaction 1
-- Reaction 2
+steps:
+- Action1 => Expectation1
+- Action2 => Expectation2
+
 teardown:
 - Do something to stop
 '''
@@ -31,12 +31,15 @@ teardown:
 @click.option('--root', '-r', type=str, default='qa')
 @click.option('--no-editor', type=bool, default=False, is_flag=True)
 @click.option('--report-dir', default='')
+@click.option('--cvs', default='git')
 @click.pass_context
-def main(ctx, root, no_editor, report_dir):
+def main(ctx, root, no_editor, report_dir, cvs):
     ctx.obj = dict()
     ctx.obj['ROOT'] = root
     ctx.obj['NO_EDITOR'] = no_editor
     ctx.obj['REPORT_DIR'] = report_dir
+    ctx.obj['CVS_ADAPTER'] = CVSFactory().create_cvs_adapter(cvs)
+
 
 @main.command()
 @click.argument('test_case_name')
@@ -61,15 +64,22 @@ def add(ctx, test_case_name, plan, force):
 
     data = dict()
     data['created'] = helpers.get_current_time_as_str()
-    data['author'] = 'Unknown'
+    data['author_name'] = ctx.obj['CVS_ADAPTER'].get_user_name()
+    data['author_email'] = ctx.obj['CVS_ADAPTER'].get_user_email()
     data['description'] = ''
 
     text = TEST_CASE_TEMPLATE.format(**data)
     if not ctx.obj['NO_EDITOR']:
-        text = click.edit(text, extension='.yml')
+        text = click.edit(text, extension='.yml', )
 
+<<<<<<< HEAD
     f = open(case_file_path, 'w', encoding='utf-8')
     f.write(text)
+=======
+    if text:
+        f = open(case_file_path, 'w')
+        f.write(text)
+>>>>>>> 0.2.0-dev
 
 
 @main.command()
@@ -118,13 +128,16 @@ def run(ctx, test_plan):
 
         report = dict()
         report['started'] = helpers.get_current_time_as_str()
+        report['tester'] = ctx.obj['CVS_ADAPTER'].get_user_name()
+        report['email'] = ctx.obj['CVS_ADAPTER'].get_user_email()
         report['cases'] = dict()
 
         for f in files:
             with open(os.path.join(root, f), encoding='utf-8') as case_file:
                 data = yaml.load(case_file)
 
-            click.echo('Start test {} - {}? [Y/n]'.format(f, data['description']))
+            click.clear()
+            click.echo('Start test {}: '.format(f) + click.style('"{}"? [Y/n]'.format(data['description']), bold=True))
 
             report['cases'][f] = dict()
             report['cases'][f]['description'] = data['description']
@@ -136,14 +149,17 @@ def run(ctx, test_plan):
                 report['cases'][f]['status'] = 'skipped'
                 continue
 
-            click.echo('You should do this before run the case: \n {} \n '.format('\n'.join(data['setup'])))
+            click.secho('SETUP:', bold=True, fg='blue')
+            click.echo('\n'.join(data['setup']))
 
             step = 0
-            for action, reaction in zip(data['actions'], data['reactions']):
+            for action, expectation in map(lambda st: st.split('=>'), data['steps']):
                 step += 1
-                click.echo('Step {}: \n ACTION: {} \n REACTION: {}\n Is it OK? [Y/n]'
-                               .format(step, action, reaction))
+                click.echo(click.style('STEP #{}:', bold=True, fg='blue').format(step) +
+                           click.style('\nACTION:\t\t', bold=True,) + action.strip() +
+                           click.style('\nEXPECTATION:\t', bold=True,) + expectation.strip())
 
+                click.echo('\nIs it OK? [Y/n]')
                 answer = input().strip().lower()
                 if answer == 'n':
                     click.secho('FAILED', fg='red')
@@ -151,7 +167,7 @@ def run(ctx, test_plan):
                     report['cases'][f]['status'] = 'failed'
                     report['cases'][f]['failed_step'] = step
                     report['cases'][f]['failed_action'] = action
-                    report['cases'][f]['failed_reaction'] = reaction
+                    report['cases'][f]['failed_reaction'] = expectation
                     report['cases'][f]['finished'] = helpers.get_current_time_as_str()
                     break
                 else:
@@ -160,6 +176,11 @@ def run(ctx, test_plan):
             if 'status' not in report['cases'][f]:
                 report['cases'][f]['status'] = 'passed'
                 report['cases'][f]['finished'] = helpers.get_current_time_as_str()
+
+            click.secho('TEARDOWN:', bold=True, fg='blue')
+            click.echo('\n'.join(data['teardown']))
+            click.echo('\nPress enter to finish')
+            input()
 
         report['finished'] = helpers.get_current_time_as_str()
 
@@ -189,3 +210,4 @@ def check(ctx):
             if case['status'] == 'failed':
                 click.secho('{} ({}) is failed'.format(file, case['description']), fg='red')
                 exit(1)
+

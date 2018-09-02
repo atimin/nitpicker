@@ -7,15 +7,14 @@ setup:
 - Run command 'python -m nitpicker -r test_qa add test_test_case -p commands'
 - Save the case without changes
 - Close the editor
-actions:
+steps:
 - Run command 'python -m nitpicker -r test_qa run commands'
+  => You should see message 'Start test test_test_case.yml - None? [Y/n]'
 - Press 'y' + Enter
+  => You should see the action and reaction of the first step
 - Press 'y' + Enter
+  => You should see green message PASSED and the action and reaction of the second step
 - Press 'y' + Enter
-reactions:
-- You should see message 'Start test test_test_case.yml - None? [Y/n]'
-- You should see the action and reaction of the first step
-- You should see green message PASSED and the action and reaction of the second step
-- You should see green message PASSED
+  => You should see green message PASSED
 teardown:
 - Delete test_qa directory

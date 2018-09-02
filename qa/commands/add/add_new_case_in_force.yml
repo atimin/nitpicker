@@ -7,11 +7,10 @@ setup:
 - Type something in the opened editor
 - Save the case
 - Close the editor
-actions:
-- Run command 'python -m nitpicker -r test_qa add test_test_case -p commands -f'
-- Save the case and close the editor
-reactions:
-- The new case should be opened in the editor
-- The case should be overwriten
+steps:
+- ^ Run command 'python -m nitpicker -r test_qa add test_test_case -p commands -f'
+  => The new case should be opened in the editor
+- ^ Save the case and close the editor
+  => The case should be overwriten
 teardown:
 - Delete test_qa directory

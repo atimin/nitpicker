@@ -51,3 +51,11 @@ Feature: Run a test plan
         When we input command "run test_plan"
         And pass all steps of all cases
         Then we got QA report in root directory
+
+    Scenario: A run report gets useranme and email from CVS
+        Given there is "test_plan" with 2 cases
+        When we input command "run test_plan"
+        And fail 2 step of 1 case with comment "Something wrong"
+        Then we got a report in "test_plan/runs"
+        And the report has "tester" equals "Mr. Hankey"
+        And the report has "email" equals "mrhankey@gmail.com"

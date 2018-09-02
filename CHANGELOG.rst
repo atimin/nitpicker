@@ -1,6 +1,22 @@
-Release 0.1.x
+Release 0.2.0
 ---------------------------------
 * #6 Fix output of list command (@flipback)
+* #2 'Add' command gets user name and email from Git repo (@flipback)
+* Make format of test cases more friendly (@flipback):
+
+.. code-block:: yaml
+
+    description: Some test to test something
+    author:
+    email:
+    tags:
+    setup:
+        - Do something
+    teardown:
+        - Do something
+    steps:
+        - Some action => Some expectation
+        - Some action => Some expectation
 
 Release 0.1.4
 ---------------------------------
@@ -8,7 +24,7 @@ Release 0.1.4
 
 Release 0.1.3
 ---------------------------------
-* Fix PyPi distribution (@flipback)
+* Fix PyPi distribution
 
 Release 0.1.0
 ---------------------------------

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import os
 import yaml
 import mako.template
@@ -7,6 +6,13 @@ from nitpicker import helpers
 
 
 class ReportGenerator:
+    """
+    Represents the report generator which finds test cases and run reports in
+    QA directory and builds a report in the given format.
+    Supported formats: only Markdown
+    :param report_format The format of the report. Supported only 'md'
+    :raise: Exception if format is not supported
+    """
     SUPPORTED_FORMATS = ['md']
 
     def __init__(self, report_format='md'):
@@ -18,6 +24,12 @@ class ReportGenerator:
         self.__format = report_format
 
     def generate(self, root, report_name='QA_REPORT', report_dir=''):
+        """
+        Generates a report in given format
+        :param root: QA directory where the generator finds test cases and reports
+        :param report_name: Name of the generated report
+        :return: None
+        """
         templ_dict = dict()
         templ_dict['header'] = 'QA Report'
         templ_dict['generated_at'] = helpers.get_current_time_as_str()

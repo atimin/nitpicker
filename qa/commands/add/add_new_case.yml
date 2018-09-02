@@ -5,12 +5,11 @@ description: Add a new case
 tags: commands
 setup:
 - Change working directory to the root of the project
-actions:
+steps:
 - Run command 'python -m nitpicker -r test_qa add test_test_case -p commands'
+  => The new case should be opened in the editor
 - Save the case and close the editor
-reactions:
-- The new case should be opened in the editor
-- File 'test_test_case.yml' should appear in test_qa/commands directory
+  => File 'test_test_case.yml' should appear in test_qa/commands directory
 teardown:
 - Delete test_qa directory
 
