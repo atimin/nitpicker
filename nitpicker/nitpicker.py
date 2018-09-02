@@ -72,14 +72,9 @@ def add(ctx, test_case_name, plan, force):
     if not ctx.obj['NO_EDITOR']:
         text = click.edit(text, extension='.yml', )
 
-<<<<<<< HEAD
-    f = open(case_file_path, 'w', encoding='utf-8')
-    f.write(text)
-=======
     if text:
-        f = open(case_file_path, 'w')
+        f = open(case_file_path, 'w', encoding='utf-8')
         f.write(text)
->>>>>>> 0.2.0-dev
 
 
 @main.command()
