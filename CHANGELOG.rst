@@ -1,6 +1,26 @@
+Release 0.2.0
+---------------------------------
+* #2 'Add' command gets user name and email from Git repo (@flipback)
+* Make format of test cases more friendly (@flipback):
+
+.. code-block:: yaml
+
+    description: Some test to test something
+    author:
+    email:
+    tags:
+    setup:
+        - Do something
+    teardown:
+        - Do something
+    steps:
+        - Some action => Some expectation
+        - Some action => Some expectation
+
+
 Release 0.1.3
 ---------------------------------
-* Fix PyPi distribution:
+* Fix PyPi distribution
 
 Release 0.1.0
 ---------------------------------
@@ -10,6 +30,5 @@ Release 0.1.0
 
 Release 0.0.3
 ---------------------------------
-
 * Fix input on Windows (@flipback)
 * Fix saving a report at the end of command *add* (@flipback)
