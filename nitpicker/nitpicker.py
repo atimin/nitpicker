@@ -4,6 +4,7 @@ import click
 import os
 import yaml
 import time
+import codecs
 from nitpicker import helpers
 from nitpicker.report_generator.generator import ReportGenerator
 
@@ -67,7 +68,7 @@ def add(ctx, test_case_name, plan, force):
     if not ctx.obj['NO_EDITOR']:
         text = click.edit(text, extension='.yml')
 
-    f = open(case_file_path, 'w')
+    f = open(case_file_path, 'w', encoding='utf-8')
     f.write(text)
 
 
