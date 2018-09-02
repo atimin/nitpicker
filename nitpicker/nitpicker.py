@@ -92,7 +92,10 @@ def list(ctx):
             subindent = ' '*2*(level + 1)
 
             files = [f for f in files if '.yml' in f]
-            click.echo('{}Plan "{}" has {} cases:'.format(indent, os.path.basename(root), calc_plans(root)))
+            case_count = calc_plans(root)
+
+            if case_count > 0:
+                click.echo('{}Plan "{}" has {} cases:'.format(indent, os.path.basename(root), case_count))
 
             for f in files:
                 data = yaml.load(open(os.path.join(root, f), encoding='utf-8'))

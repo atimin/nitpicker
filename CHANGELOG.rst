@@ -1,3 +1,7 @@
+Release 0.1.x
+---------------------------------
+* #6 Fix output of list command (@flipback)
+
 Release 0.1.4
 ---------------------------------
 * Fix UTF-8 bug in YAML dumping (@flipback)
