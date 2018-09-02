@@ -17,12 +17,10 @@ description: {description}
 tags:
 setup:
 - Do something to start
-actions:
-- Action 1
-- Action 2
-reactions:
-- Reaction 1
-- Reaction 2
+steps:
+- Action1 => Expectation1
+- Action2 => Expectation2
+
 teardown:
 - Do something to stop
 '''
@@ -129,7 +127,8 @@ def run(ctx, test_plan):
             with open(os.path.join(root, f), encoding='utf-8') as case_file:
                 data = yaml.load(case_file)
 
-            click.echo('Start test {} - {}? [Y/n]'.format(f, data['description']))
+            click.clear()
+            click.echo('Start test {}: '.format(f) + click.style('"{}"? [Y/n]'.format(data['description']), bold=True))
 
             report['cases'][f] = dict()
             report['cases'][f]['description'] = data['description']
@@ -141,14 +140,17 @@ def run(ctx, test_plan):
                 report['cases'][f]['status'] = 'skipped'
                 continue
 
-            click.echo('You should do this before run the case: \n {} \n '.format('\n'.join(data['setup'])))
+            click.secho('SETUP:', bold=True, fg='blue')
+            click.echo('\n'.join(data['setup']))
 
             step = 0
-            for action, reaction in zip(data['actions'], data['reactions']):
+            for action, expectation in map(lambda st: st.split('=>'), data['steps']):
                 step += 1
-                click.echo('Step {}: \n ACTION: {} \n REACTION: {}\n Is it OK? [Y/n]'
-                               .format(step, action, reaction))
+                click.echo(click.style('STEP #{}:', bold=True, fg='blue').format(step) +
+                           click.style('\nACTION:\t\t', bold=True,) + action.strip() +
+                           click.style('\nEXPECTATION:\t', bold=True,) + expectation.strip())
 
+                click.echo('\nIs it OK? [Y/n]')
                 answer = input().strip().lower()
                 if answer == 'n':
                     click.secho('FAILED', fg='red')
@@ -156,7 +158,7 @@ def run(ctx, test_plan):
                     report['cases'][f]['status'] = 'failed'
                     report['cases'][f]['failed_step'] = step
                     report['cases'][f]['failed_action'] = action
-                    report['cases'][f]['failed_reaction'] = reaction
+                    report['cases'][f]['failed_reaction'] = expectation
                     report['cases'][f]['finished'] = helpers.get_current_time_as_str()
                     break
                 else:
@@ -165,6 +167,11 @@ def run(ctx, test_plan):
             if 'status' not in report['cases'][f]:
                 report['cases'][f]['status'] = 'passed'
                 report['cases'][f]['finished'] = helpers.get_current_time_as_str()
+
+            click.secho('TEARDOWN:', bold=True, fg='blue')
+            click.echo('\n'.join(data['teardown']))
+            click.echo('\nPress enter to finish')
+            input()
 
         report['finished'] = helpers.get_current_time_as_str()
 

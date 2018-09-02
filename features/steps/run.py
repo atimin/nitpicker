@@ -97,7 +97,6 @@ def step_impl(context, field, value):
     assert context.report[field] == value
 
 
-
 @then('we see message "{msg}"')
 def step_impl(context, msg):
     assert msg in context.result.output
@@ -110,15 +109,15 @@ def step_impl(context):
 
 
 def input_to_pass_case():
-    return 'y\ny\ny\n'
+    return 'y\ny\ny\n\n'
 
 
 def input_to_skip_case():
-    return 'n\ny\ny\n'
+    return 'n\ny\ny\n\n'
 
 
 def input_to_fail_case_in_n_step(n, comment=''):
-    keys = list('y\ny\ny\n')
+    keys = list('y\ny\ny\n\n')
     keys[n*2] = 'n'
     keys = keys[:n*2+2] + list(comment + '\n') + keys[n*2+2:]
     return "".join(keys)

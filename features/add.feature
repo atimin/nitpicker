@@ -37,8 +37,7 @@ Feature: Adding a new case
     | created    |  datetime.datetime   |
     | author     |  str                 |
     | setup      |  list                |
-    | actions    |  list                |
-    | reactions  |  list                |
+    | steps      |  list                |
     | teardown   |  list                |
 
     Scenario: A user adds new case with its name and email from CVS
