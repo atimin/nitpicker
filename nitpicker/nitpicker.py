@@ -32,13 +32,14 @@ teardown:
 @click.option('--root', '-r', type=str, default='qa')
 @click.option('--no-editor', type=bool, default=False, is_flag=True)
 @click.option('--report-dir', default='')
+@click.option('--cvs', default='git')
 @click.pass_context
-def main(ctx, root, no_editor, report_dir):
+def main(ctx, root, no_editor, report_dir, cvs):
     ctx.obj = dict()
     ctx.obj['ROOT'] = root
     ctx.obj['NO_EDITOR'] = no_editor
     ctx.obj['REPORT_DIR'] = report_dir
-    ctx.obj['CVS_ADAPTER'] = CVSFactory().create_cvs_adapter()
+    ctx.obj['CVS_ADAPTER'] = CVSFactory().create_cvs_adapter(cvs)
 
 
 @main.command()
@@ -120,8 +121,8 @@ def run(ctx, test_plan):
 
         report = dict()
         report['started'] = helpers.get_current_time_as_str()
-        report['tester_name'] = ctx.obj['CVS_ADAPTER'].get_user_name()
-        report['tester_email'] = ctx.obj['CVS_ADAPTER'].get_user_email()
+        report['tester'] = ctx.obj['CVS_ADAPTER'].get_user_name()
+        report['email'] = ctx.obj['CVS_ADAPTER'].get_user_email()
         report['cases'] = dict()
 
         for f in files:

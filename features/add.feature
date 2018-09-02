@@ -41,5 +41,10 @@ Feature: Adding a new case
     | reactions  |  list                |
     | teardown   |  list                |
 
-    Scenario: A user
-
+    Scenario: A user adds new case with its name and email from CVS
+        Given the test QA directory is empty
+        When we input command "add test_test_case1"
+        And option -p is set with "feature_1"
+        Then a new case "test_test_case1.yml" is created in "feature_1"
+        And has "author" equals "Mr. Hankey"
+        And has "email" equals "mrhankey@gmail.com"

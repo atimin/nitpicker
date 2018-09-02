@@ -92,6 +92,12 @@ def step_impl(context, comment, step_num, case_num):
     assert case['comment'] == comment
 
 
+@then('the report has "{field}" equals "{value}"')
+def step_impl(context, field, value):
+    assert context.report[field] == value
+
+
+
 @then('we see message "{msg}"')
 def step_impl(context, msg):
     assert msg in context.result.output
