@@ -41,4 +41,5 @@ Feature: Adding a new case
     | reactions  |  list                |
     | teardown   |  list                |
 
+    Scenario: A user
 

@@ -8,7 +8,7 @@ class CVSFactory:
     Factory of CVS adapters
     """
 
-    SUPPORTED_CSV = ['git']
+    CVS_ADAPTERS = { 'git': GitAdapter}
 
     def create_cvs_adapter(self, cvs='git'):
         """
@@ -17,13 +17,11 @@ class CVSFactory:
         :return: CVSAdapter
         :raise: Exception if foramt is not supported
         """
-        if cvs not in self.SUPPORTED_CSV:
-            raise 'CVS {} is not supported.'.format(cvs)
+        if cvs not in self.CVS_ADAPTERS:
+            raise Exception('CVS {} is not supported.'.format(cvs))
 
         try:
-            return {
-                'git': GitAdapter()
-            }.get(cvs)
+            return self.CVS_ADAPTERS.get(cvs)()
         except Exception:
             return NullAdapter()
 
