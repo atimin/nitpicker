@@ -19,7 +19,7 @@ def before_scenario(context, _):
 
     context.test_dir = os.path.join(os.path.dirname(__file__), 'test_qa')
     context.runner = CliRunner()
-    context.command = ['-r', context.test_dir, '--no-editor',
+    context.command = ['-d', context.test_dir, '--no-editor',
                        '--report-dir', context.test_dir,
                        '--cvs', 'mock_cvs',
                        ]

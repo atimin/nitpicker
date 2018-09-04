@@ -1,0 +1,4 @@
+qa_dir:     test_qa
+no_editor:  true
+report_dir: test_report
+cvs:        test_cvs

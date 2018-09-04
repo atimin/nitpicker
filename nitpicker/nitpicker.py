@@ -4,7 +4,6 @@ import click
 import os
 import yaml
 import time
-import codecs
 from nitpicker import helpers
 from nitpicker.report_generator import ReportGenerator
 from nitpicker.cvs import CVSFactory
@@ -28,17 +27,39 @@ teardown:
 
 
 @click.group()
-@click.option('--root', '-r', type=str, default='qa')
-@click.option('--no-editor', type=bool, default=False, is_flag=True)
-@click.option('--report-dir', default='')
-@click.option('--cvs', default='git')
+@click.option('--qa-dir', '-d', type=str, default=None,
+              help='QA directory where you store all your test plan and cases. Default: qa')
+@click.option('--no-editor', type=bool, default=None, is_flag=True,
+              help='Not use the system editor when you create a new test case')
+@click.option('--report-dir', default=None,
+              help='Report directory where the QA report should be created: Default: working directory')
+@click.option('--cvs', default=None,
+              help='CVS of the project. Default: git')
 @click.pass_context
-def main(ctx, root, no_editor, report_dir, cvs):
+def main(ctx, qa_dir, no_editor, report_dir, cvs):
+    __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs)
+
+
+def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, cfg_file='.nitpicker.yml'):
     ctx.obj = dict()
-    ctx.obj['ROOT'] = root
-    ctx.obj['NO_EDITOR'] = no_editor
-    ctx.obj['REPORT_DIR'] = report_dir
-    ctx.obj['CVS_ADAPTER'] = CVSFactory().create_cvs_adapter(cvs)
+    user_config = None
+
+    def init_config_param(param, click_option, defaul_value):
+        if click_option is None:
+            ctx.obj[param] = user_config[param] if user_config is not None and param in user_config else defaul_value
+        else:
+            ctx.obj[param] = click_option
+
+    try:
+        with open(cfg_file, encoding='utf-8') as cfg:
+            user_config = yaml.load(cfg)
+
+    except FileNotFoundError:
+        pass
+    init_config_param('qa_dir', qa_dir, 'qa')
+    init_config_param('no_editor', no_editor, False)
+    init_config_param('report_dir', report_dir, '')
+    init_config_param('cvs', cvs, 'git')
 
 
 @main.command()
@@ -52,7 +73,7 @@ def add(ctx, test_case_name, plan, force):
     """
     Add a new test case to a plan.
     """
-    case_dir = os.path.join(*([ctx.obj['ROOT']] + plan.split('.')))
+    case_dir = os.path.join(*([ctx.obj['qa_dir']] + plan.split('.')))
     case_file_path = os.path.join(case_dir, test_case_name + '.yml')
 
     if not os.path.exists(case_dir):
@@ -63,13 +84,15 @@ def add(ctx, test_case_name, plan, force):
         exit(1)
 
     data = dict()
+    cvs_adapter = CVSFactory().create_cvs_adapter(ctx.obj['cvs'])
+
     data['created'] = helpers.get_current_time_as_str()
-    data['author_name'] = ctx.obj['CVS_ADAPTER'].get_user_name()
-    data['author_email'] = ctx.obj['CVS_ADAPTER'].get_user_email()
+    data['author_name'] = cvs_adapter.get_user_name()
+    data['author_email'] = cvs_adapter.get_user_email()
     data['description'] = ''
 
     text = TEST_CASE_TEMPLATE.format(**data)
-    if not ctx.obj['NO_EDITOR']:
+    if not ctx.obj['no_editor']:
         text = click.edit(text, extension='.yml', )
 
     if text:
@@ -89,21 +112,21 @@ def list(ctx):
 
         return count
 
-    click.echo('You project has {} test cases'.format(calc_plans(ctx.obj['ROOT'])))
-    for root, dirs, files in os.walk(ctx.obj['ROOT']):
-        if not root == ctx.obj['ROOT']:
-            level = root.replace(ctx.obj['ROOT'], '').count(os.sep) - 1
+    click.echo('You project has {} test cases'.format(calc_plans(ctx.obj['qa_dir'])))
+    for qa_dir, dirs, files in os.walk(ctx.obj['qa_dir']):
+        if not qa_dir == ctx.obj['qa_dir']:
+            level = qa_dir.replace(ctx.obj['qa_dir'], '').count(os.sep) - 1
             indent = ' '*2*level
             subindent = ' '*2*(level + 1)
 
             files = [f for f in files if '.yml' in f]
-            case_count = calc_plans(root)
+            case_count = calc_plans(qa_dir)
 
             if case_count > 0:
-                click.echo('{}Plan "{}" has {} cases:'.format(indent, os.path.basename(root), case_count))
+                click.echo('{}Plan "{}" has {} cases:'.format(indent, os.path.basename(qa_dir), case_count))
 
             for f in files:
-                data = yaml.load(open(os.path.join(root, f), encoding='utf-8'))
+                data = yaml.load(open(os.path.join(qa_dir, f), encoding='utf-8'))
                 click.echo('{}{} - {}'.format(subindent, f[0:-4], data['description'] if 'description' in data else ''))
 
 
@@ -114,21 +137,23 @@ def run(ctx, test_plan):
     """
     Run a test plan in the plan tree separated by dot
     """
-    case_dir = os.path.join(*([ctx.obj['ROOT']] + test_plan.split('.')))
+    case_dir = os.path.join(*([ctx.obj['qa_dir']] + test_plan.split('.')))
 
-    for root, _, files in os.walk(case_dir):
+    for qa_dir, _, files in os.walk(case_dir):
         files = [f for f in files if '.yml' in f]
         if len(files) == 0:
             continue
 
         report = dict()
+        cvs_adapter = CVSFactory().create_cvs_adapter(ctx.obj['cvs'])
+
         report['started'] = helpers.get_current_time_as_str()
-        report['tester'] = ctx.obj['CVS_ADAPTER'].get_user_name()
-        report['email'] = ctx.obj['CVS_ADAPTER'].get_user_email()
+        report['tester'] = cvs_adapter.get_user_name()
+        report['email'] = cvs_adapter.get_user_email()
         report['cases'] = dict()
 
         for f in files:
-            with open(os.path.join(root, f), encoding='utf-8') as case_file:
+            with open(os.path.join(qa_dir, f), encoding='utf-8') as case_file:
                 data = yaml.load(case_file)
 
             click.clear()
@@ -179,7 +204,7 @@ def run(ctx, test_plan):
 
         report['finished'] = helpers.get_current_time_as_str()
 
-        run_dir = os.path.join(root, 'runs')
+        run_dir = os.path.join(qa_dir, 'runs')
         if not os.path.exists(run_dir):
             os.makedirs(run_dir)
 
@@ -187,18 +212,18 @@ def run(ctx, test_plan):
                   'w', encoding='utf-8') as report_file:
             yaml.dump(report, report_file, default_flow_style=False, allow_unicode=True)
 
-        ReportGenerator('md').generate(ctx.obj['ROOT'], report_dir=ctx.obj['REPORT_DIR'])
+        ReportGenerator('md').generate(ctx.obj['qa_dir'], report_dir=ctx.obj['report_dir'])
 
 
 @main.command()
 @click.pass_context
 def check(ctx):
-    for root, _, files in os.walk(ctx.obj['ROOT']):
+    for qa_dir, _, files in os.walk(ctx.obj['qa_dir']):
         files = [f for f in files if '.report' in f]
         if len(files) == 0:
             continue
 
-        last_report_file = open(os.path.join(root, sorted(files)[-1]), encoding='utf-8')
+        last_report_file = open(os.path.join(qa_dir, sorted(files)[-1]), encoding='utf-8')
         report = yaml.load(last_report_file)
 
         for file, case in report['cases'].items():
