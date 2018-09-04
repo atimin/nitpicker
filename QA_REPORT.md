@@ -1,6 +1,6 @@
 # QA Report
 
-**Generated At**: 2018-09-02 11:13:38
+**Generated At**: 2018-09-04 17:39:59
 
 **QA directory**: qa
 
@@ -10,8 +10,8 @@
     
 | TestCase | Description |Author | Run Count | Last Run |
 |----------|-------------|-------|-----------|----------|    
-| add_new_case.yml | Add a new case | Aleksey Timin | 17 | 2018-09-02 11:13:32 |
-| add_new_case_in_force.yml | Add a new case in force mode | Aleksey Timin | 8 | 2018-09-02 11:13:37 |
+| add_new_case.yml | Add a new case | Aleksey Timin | 4 | 2018-08-26 09:31:16 |
+| add_new_case_in_force.yml | Add a new case in force mode | Aleksey Timin | 3 | 2018-09-04 17:39:58 |
     
 ### qa.commands.run
     

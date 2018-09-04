@@ -56,10 +56,12 @@ def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, cfg_file='.nitpicker.y
 
     except FileNotFoundError:
         pass
+
     init_config_param('qa_dir', qa_dir, 'qa')
     init_config_param('no_editor', no_editor, False)
     init_config_param('report_dir', report_dir, '')
     init_config_param('cvs', cvs, 'git')
+    init_config_param('main_branch', None, 'master')
 
 
 @main.command()
@@ -218,6 +220,10 @@ def run(ctx, test_plan):
 @main.command()
 @click.pass_context
 def check(ctx):
+    total_case_count = 0
+    total_failed_case_count = 0
+    total_skipped_case_count = 0
+
     for qa_dir, _, files in os.walk(ctx.obj['qa_dir']):
         files = [f for f in files if '.report' in f]
         if len(files) == 0:
@@ -226,8 +232,31 @@ def check(ctx):
         last_report_file = open(os.path.join(qa_dir, sorted(files)[-1]), encoding='utf-8')
         report = yaml.load(last_report_file)
 
+        case_count = 0
+        failed_case_count = 0
+        skipped_case_count = 0
         for file, case in report['cases'].items():
+            case_count += 1
             if case['status'] == 'failed':
-                click.secho('{} ({}) is failed'.format(file, case['description']), fg='red')
-                exit(1)
+                click.secho('[FAILED] {} ({})'.format(file, case['description']), fg='red')
+                click.secho('Failed step {}:'.format(case['failed_step']), bold=True)
+                click.echo('Done: {}'.format(case['failed_action']))
+                click.echo('Expected: {}'.format(case['failed_action']))
+                click.echo('But got: {}'.format(case['comment']))
+                failed_case_count += 1
+            elif case['status'] == 'skipped':
+                click.secho('[SKIPPED]{} ({})'.format(file, case['description']), fg='yellow')
+                skipped_case_count += 1
 
+        click.echo('Plan ' + click.style('.'.join(qa_dir.split(os.path.sep)[1:-1]), bold=True)
+                   + ' has {} failed and {} skipped of {} test cases'
+                   .format(failed_case_count, skipped_case_count, case_count))
+
+        total_case_count += case_count
+        total_failed_case_count += failed_case_count
+        total_skipped_case_count += skipped_case_count
+
+    click.echo('Totally your project has {} failed and {} skipped of {} test cases'
+               .format(total_failed_case_count, total_skipped_case_count, total_case_count))
+
+    exit(0 if total_skipped_case_count == 0 else 1)
