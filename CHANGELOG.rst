@@ -1,7 +1,8 @@
 Release 0.2.0
 ---------------------------------
-* #6 Fix output of list command (@flipback)
+* #6 Fix output of command 'list' (@flipback)
 * #2 'Add' command gets user name and email from Git repo (@flipback)
+* #8 Fix error of utf-8 encoding in command 'add' (@Rumpelshtinskiy)
 * Make format of test cases more friendly (@flipback):
 
 .. code-block:: yaml
