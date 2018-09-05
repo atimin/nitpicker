@@ -8,7 +8,7 @@ with open('README.rst') as f:
 
 setup(
     name='nitpicker',
-    version='0.2.0',
+    version='0.3.0-dev',
     description='A simple CLI tool for QA',
     long_description=readme,
     author='Aleksey Timin',

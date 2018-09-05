@@ -240,9 +240,9 @@ def check(ctx):
             if case['status'] == 'failed':
                 click.secho('[FAILED] {} ({})'.format(file, case['description']), fg='red')
                 click.secho('Failed step {}:'.format(case['failed_step']), bold=True)
-                click.echo('Done: {}'.format(case['failed_action']))
-                click.echo('Expected: {}'.format(case['failed_action']))
-                click.echo('But got: {}'.format(case['comment']))
+                click.echo('Done:     {}'.format(case['failed_action'].strip()))
+                click.echo('Expected: {}'.format(case['failed_reaction'].strip()))
+                click.echo('But got:  {}'.format(case['comment'].strip()))
                 failed_case_count += 1
             elif case['status'] == 'skipped':
                 click.secho('[SKIPPED]{} ({})'.format(file, case['description']), fg='yellow')
@@ -259,4 +259,4 @@ def check(ctx):
     click.echo('Totally your project has {} failed and {} skipped of {} test cases'
                .format(total_failed_case_count, total_skipped_case_count, total_case_count))
 
-    exit(0 if total_skipped_case_count == 0 else 1)
+    exit(0 if total_failed_case_count == 0 else 1)
