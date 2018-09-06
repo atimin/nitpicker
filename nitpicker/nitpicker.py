@@ -37,6 +37,9 @@ teardown:
               help='CVS of the project. Default: git')
 @click.pass_context
 def main(ctx, qa_dir, no_editor, report_dir, cvs):
+    """
+    Nitpicker is a CLI tool for QA testing
+    """
     __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs)
 
 
@@ -73,7 +76,14 @@ def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, cfg_file='.nitpicker.y
 @click.pass_context
 def add(ctx, test_case_name, plan, force):
     """
-    Add a new test case to a plan.
+    Add a new test case to a plan
+
+    Example: nitpicker add 'some_new_case' -p new_feature.plan_2
+
+    The program add a new test case into test plan's directory 'qa/new_feature/plan_2
+    and open it in the default editor if the directory doesn't exist, it is created.
+
+    In order to override the old test case with a new one use flag --force or -f .
     """
     case_dir = os.path.join(*([ctx.obj['qa_dir']] + plan.split('.')))
     case_file_path = os.path.join(case_dir, test_case_name + '.yml')
@@ -105,7 +115,9 @@ def add(ctx, test_case_name, plan, force):
 @main.command()
 @click.pass_context
 def list(ctx):
-
+    """
+    Show the tree of the test plans
+    """
     def calc_plans(path):
         count = 0
         for _, dirs_, files_ in os.walk(path):
@@ -138,6 +150,12 @@ def list(ctx):
 def run(ctx, test_plan):
     """
     Run a test plan in the plan tree separated by dot
+
+    Example: nitpicker run some_feature.plan_1.set_1
+
+    The program tries to find directory 'qa/some_feature/plan_1/set_2\ in the working directory
+    and run all the test cases in it. After the running it saves a report in YAML format
+    with name '%Y%m%d_%H%M%S_run.report'
     """
     case_dir = os.path.join(*([ctx.obj['qa_dir']] + test_plan.split('.')))
 
@@ -220,6 +238,13 @@ def run(ctx, test_plan):
 @main.command()
 @click.pass_context
 def check(ctx):
+    """
+    Check if all the last run reports has no failed test cases
+
+    The program walks 'qa' directory recursively and checks last run reports
+    of each test plan. If at least one of them has a failed test case, the
+    program finishes with error.
+    """
     total_case_count = 0
     total_failed_case_count = 0
     total_skipped_case_count = 0
