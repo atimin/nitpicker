@@ -229,8 +229,8 @@ def check(ctx):
         if len(files) == 0:
             continue
 
-        last_report_file = open(os.path.join(qa_dir, sorted(files)[-1]), encoding='utf-8')
-        report = yaml.load(last_report_file)
+        with open(os.path.join(qa_dir, sorted(files)[-1]), encoding='utf-8') as last_report_file:
+            report = yaml.load(last_report_file)
 
         case_count = 0
         failed_case_count = 0
