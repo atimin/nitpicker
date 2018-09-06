@@ -8,6 +8,7 @@ from nitpicker import helpers
 from nitpicker.report_generator import ReportGenerator
 from nitpicker.cvs import CVSFactory
 
+__version__ = '0.3.0-dev'
 
 TEST_CASE_TEMPLATE = '''
 created: {created}
@@ -27,6 +28,7 @@ teardown:
 
 
 @click.group()
+@click.version_option(version=__version__, prog_name='nitpicker')
 @click.option('--qa-dir', '-d', type=str, default=None,
               help='QA directory where you store all your test plan and cases. Default: qa')
 @click.option('--no-editor', type=bool, default=None, is_flag=True,

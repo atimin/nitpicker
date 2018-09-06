@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-
+from nitpicker import __version__
 
 with open('README.rst') as f:
     readme = f.read()
 
 setup(
     name='nitpicker',
-    version='0.3.0-dev',
+    version=__version__,
     description='A simple CLI tool for QA',
     long_description=readme,
     author='Aleksey Timin',
