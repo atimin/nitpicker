@@ -339,5 +339,6 @@ def check(ctx, qa_updated):
         if added_run_count == 0:
             click.secho('You has not run any test cases. You must run some QA tests before delivering your code.',
                         fg='red')
+            exit(1)
 
     exit(0)
