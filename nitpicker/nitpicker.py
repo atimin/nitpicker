@@ -239,7 +239,9 @@ def run(ctx, test_plan):
 
 @main.command()
 @click.pass_context
-def check(ctx):
+@click.option('--qa_updated', type=bool, default=False, is_flag=True,
+              help='Check if current branch has updated its test cases.')
+def check(ctx, qa_updated):
     """
     Check if all the last run reports has no failed test cases
 
@@ -286,4 +288,56 @@ def check(ctx):
     click.echo('Totally your project has {} failed and {} skipped of {} test cases'
                .format(total_failed_case_count, total_skipped_case_count, total_case_count))
 
-    exit(0 if total_failed_case_count == 0 else 1)
+    if total_failed_case_count > 0:
+        exit(1)
+
+    if qa_updated:
+        cvs_adapter = CVSFactory().create_cvs_adapter(ctx.obj['cvs'])
+        diffs = cvs_adapter.diff('HEAD', ctx.obj['main_branch'])
+
+        qa_updates = [update for update in diffs if '.\\{}'.format(ctx.obj['qa_dir']) in update['object']]
+
+        added_case_count = 0
+        modified_case_count = 0
+        deleted_case_count = 0
+        added_run_count = 0
+        modified_run_count = 0
+        deleted_run_count = 0
+
+        def is_case(obj):
+            return obj[-4:] == '.yml'
+
+        def is_run(obj):
+            return obj[-7:] == '.report'
+
+        for update in qa_updates:
+            if update['type'] == 'A':
+                if is_case(update['object']):
+                    added_case_count += 1
+                if is_run(update['object']):
+                    added_run_count += 1
+
+            if update['type'] == 'D':
+                if is_case(update['object']):
+                    deleted_case_count += 1
+                if is_run(update['object']):
+                    deleted_run_count += 1
+
+            if update['type'] == 'M':
+                if is_case(update['object']):
+                    modified_case_count += 1
+                if is_run(update['object']):
+                    modified_run_count += 1
+
+        click.secho('-----------------------------------')
+        click.secho('Current branch has:', bold=True)
+        click.echo('{} added, {} modified and {} deleted cases'
+                   .format(added_case_count, modified_case_count, deleted_case_count))
+        click.echo('{} added, {} modified and {} deleted runs'
+                   .format(added_run_count, modified_run_count, deleted_run_count))
+
+        if added_run_count == 0:
+            click.secho('You has not run any test cases. You must run some QA tests before delivering your code.',
+                        fg='red')
+
+    exit(0)

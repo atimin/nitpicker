@@ -7,6 +7,9 @@ class NullAdapter(CVSAdapter):
     Null implementation of CVSAdapter
     """
 
+    def diff(self, parent_branch):
+        pass
+
     def get_user_name(self):
         return "Unknown"
 

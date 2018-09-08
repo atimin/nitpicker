@@ -14,4 +14,4 @@ install:
 script:
   - nose2
   - behave
-  - python -m nitpicker check
+  - python -m nitpicker check --qa_update

@@ -17,3 +17,21 @@ class CVSAdapter:
         :return:
         """
         raise NotImplementedError
+
+    def diff(self, branch, parent_branch):
+        """
+        Get difference between branch and its parent
+
+        :return: Returns a generator of dicts:
+        {'insertions': 3,
+            'deletions': 3,
+            'lines': 6,
+            'object': '.\\QA_REPORT.md',
+            'commit': '8e3bacd9e6f333b92bc974844168b68acf95816e',
+            'author': 'atimin@gmail.com',
+            'timestamp': datetime.datetime(..),
+            'type': 'M'
+        }
+
+        """
+        raise NotImplementedError
