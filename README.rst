@@ -85,3 +85,22 @@ repo to a CI server can check if all tests are passed
 
 The project uses itself for testing. You can find *qa* directory in the repo.
 Also you can run some plans for demonstration.
+
+
+
+Installation
+.........................
+
+::
+
+    pip install nitpicker
+
+
+or
+
+::
+
+    python -m install nitpicker
+
+
+Currently Nitpicker supports Python 3.3 and newer
