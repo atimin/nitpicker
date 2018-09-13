@@ -4,12 +4,24 @@ import yaml
 
 
 class CheckCommandHandler:
+    """
+    Implements 'check' command
+    """
     def __init__(self, qa_dir, cvs_adapter, main_branch):
+        """
+        :param qa_dir: The QA dir where it searches runs
+        :param cvs_adapter: CVS adapter to access to Repo
+        :param main_branch: the branch where the current branch is to merge in
+        """
         self.__qa_dir = qa_dir
         self.__cvs_adapter = cvs_adapter
         self.__main_branch = main_branch
 
     def check_all_runs_passed(self):
+        """
+        Check if all the last runs passed
+        :return: True if it is success
+        """
         click.secho('-----------------------------------')
         click.secho('Check if all the last runs passed.', bold=True)
         click.secho('-----------------------------------')
@@ -56,6 +68,10 @@ class CheckCommandHandler:
         return total_failed_case_count == 0
 
     def check_has_new_runs(self):
+        """
+        Check if current branch has new runs
+        :return: True if it is success
+        """
         click.secho('-----------------------------------')
         click.secho('Check if current branch has new runs.', bold=True)
         click.secho('-----------------------------------')
