@@ -1,0 +1,20 @@
+
+created: 2018-09-13 22:13:06
+author: Aleksey Timin
+description: Run a test plan and pass all tests
+tags: commands
+setup:
+- Run command 'python -m nitpicker -r test_qa add test_test_case -p commands'
+- Save the case without changes
+- Close the editor
+steps:
+- Run command 'python -m nitpicker -r test_qa run commands'
+  => You should see message 'Start test test_test_case.yml - None? [Y/n]'
+- Press 'y' + Enter
+  => You should see the action and reaction of the first step
+- Press 'y' + Enter
+  => You should see green message PASSED and the action and reaction of the second step
+- Press 'y' + Enter
+  => You should see green message PASSED
+teardown:
+- Delete test_qa directory
