@@ -9,6 +9,7 @@ from nitpicker.report_generator import ReportGenerator
 from nitpicker.cvs import CVSFactory
 
 __version__ = '0.3.0-dev'
+__cvs_factory__ = CVSFactory()
 
 TEST_CASE_TEMPLATE = '''
 created: {created}
@@ -98,7 +99,7 @@ def add(ctx, test_case_name, plan, force):
         exit(1)
 
     data = dict()
-    cvs_adapter = CVSFactory().create_cvs_adapter(ctx.obj['cvs'])
+    cvs_adapter = __cvs_factory__.create_cvs_adapter(ctx.obj['cvs'])
 
     data['created'] = helpers.get_current_time_as_str()
     data['author_name'] = cvs_adapter.get_user_name()
@@ -167,7 +168,7 @@ def run(ctx, test_plan):
             continue
 
         report = dict()
-        cvs_adapter = CVSFactory().create_cvs_adapter(ctx.obj['cvs'])
+        cvs_adapter = __cvs_factory__.create_cvs_adapter(ctx.obj['cvs'])
 
         report['started'] = helpers.get_current_time_as_str()
         report['tester'] = cvs_adapter.get_user_name()
@@ -239,9 +240,11 @@ def run(ctx, test_plan):
 
 @main.command()
 @click.pass_context
-@click.option('--qa_updated', type=bool, default=False, is_flag=True,
-              help='Check if current branch has updated its test cases.')
-def check(ctx, qa_updated):
+@click.option('--all-runs-passed', type=bool, default=False, is_flag=True,
+              help='Check if all the last runs passed.')
+@click.option('--has-new-runs', type=bool, default=False, is_flag=True,
+              help='Check if current branch has new runs.')
+def check(ctx, all_runs_passed, has_new_runs):
     """
     Check if all the last run reports has no failed test cases
 
@@ -249,50 +252,59 @@ def check(ctx, qa_updated):
     of each test plan. If at least one of them has a failed test case, the
     program finishes with error.
     """
-    total_case_count = 0
-    total_failed_case_count = 0
-    total_skipped_case_count = 0
+    if all_runs_passed:
+        click.secho('-----------------------------------')
+        click.secho('Check if all the last runs passed.', bold=True)
+        click.secho('-----------------------------------')
 
-    for qa_dir, _, files in os.walk(ctx.obj['qa_dir']):
-        files = [f for f in files if '.report' in f]
-        if len(files) == 0:
-            continue
+        total_case_count = 0
+        total_failed_case_count = 0
+        total_skipped_case_count = 0
 
-        with open(os.path.join(qa_dir, sorted(files)[-1]), encoding='utf-8') as last_report_file:
-            report = yaml.load(last_report_file)
+        for qa_dir, _, files in os.walk(ctx.obj['qa_dir']):
+            files = [f for f in files if '.report' in f]
+            if len(files) == 0:
+                continue
 
-        case_count = 0
-        failed_case_count = 0
-        skipped_case_count = 0
-        for file, case in report['cases'].items():
-            case_count += 1
-            if case['status'] == 'failed':
-                click.secho('[FAILED] {} ({})'.format(file, case['description']), fg='red')
-                click.secho('Failed step {}:'.format(case['failed_step']), bold=True)
-                click.echo('Done:     {}'.format(case['failed_action'].strip()))
-                click.echo('Expected: {}'.format(case['failed_reaction'].strip()))
-                click.echo('But got:  {}'.format(case['comment'].strip()))
-                failed_case_count += 1
-            elif case['status'] == 'skipped':
-                click.secho('[SKIPPED]{} ({})'.format(file, case['description']), fg='yellow')
-                skipped_case_count += 1
+            with open(os.path.join(qa_dir, sorted(files)[-1]), encoding='utf-8') as last_report_file:
+                report = yaml.load(last_report_file)
 
-        click.echo('Plan ' + click.style('.'.join(qa_dir.split(os.path.sep)[1:-1]), bold=True)
-                   + ' has {} failed and {} skipped of {} test cases'
-                   .format(failed_case_count, skipped_case_count, case_count))
+            case_count = 0
+            failed_case_count = 0
+            skipped_case_count = 0
+            for file, case in report['cases'].items():
+                case_count += 1
+                if case['status'] == 'failed':
+                    click.secho('[FAILED] {} ({})'.format(file, case['description']), fg='red')
+                    click.secho('Failed step {}:'.format(case['failed_step']), bold=True)
+                    click.echo('Done:     {}'.format(case['failed_action'].strip()))
+                    click.echo('Expected: {}'.format(case['failed_reaction'].strip()))
+                    click.echo('But got:  {}'.format(case['comment'].strip()))
+                    failed_case_count += 1
+                elif case['status'] == 'skipped':
+                    click.secho('[SKIPPED]{} ({})'.format(file, case['description']), fg='yellow')
+                    skipped_case_count += 1
 
-        total_case_count += case_count
-        total_failed_case_count += failed_case_count
-        total_skipped_case_count += skipped_case_count
+            click.echo('Plan ' + click.style('.'.join(qa_dir.split(os.path.sep)[1:-1]), bold=True)
+                       + ' has {} failed and {} skipped of {} test cases'
+                       .format(failed_case_count, skipped_case_count, case_count))
 
-    click.echo('Totally your project has {} failed and {} skipped of {} test cases'
-               .format(total_failed_case_count, total_skipped_case_count, total_case_count))
+            total_case_count += case_count
+            total_failed_case_count += failed_case_count
+            total_skipped_case_count += skipped_case_count
 
-    if total_failed_case_count > 0:
-        exit(1)
+        click.echo('Totally your project has {} failed and {} skipped of {} test cases'
+                   .format(total_failed_case_count, total_skipped_case_count, total_case_count))
 
-    if qa_updated:
-        cvs_adapter = CVSFactory().create_cvs_adapter(ctx.obj['cvs'])
+        if total_failed_case_count > 0:
+            exit(1)
+
+    if has_new_runs:
+        click.secho('-----------------------------------')
+        click.secho('Check if current branch has new runs.', bold=True)
+        click.secho('-----------------------------------')
+
+        cvs_adapter = __cvs_factory__.create_cvs_adapter(ctx.obj['cvs'])
         diffs = cvs_adapter.diff('HEAD', ctx.obj['main_branch'])
 
         qa_updates = [update for update in diffs if '.\\{}'.format(ctx.obj['qa_dir']) in update['object']]
@@ -329,7 +341,6 @@ def check(ctx, qa_updated):
                 if is_run(update['object']):
                     modified_run_count += 1
 
-        click.secho('-----------------------------------')
         click.secho('Current branch has:', bold=True)
         click.echo('{} added, {} modified and {} deleted cases'
                    .format(added_case_count, modified_case_count, deleted_case_count))

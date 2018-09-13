@@ -2,6 +2,7 @@ from behave import *
 from nitpicker import nitpicker
 import os
 import yaml
+from unittest.mock import patch, Mock
 import features.common
 
 
@@ -32,5 +33,30 @@ def step_impl(context, count, case_status, plan):
 def step_impl(context, status_code):
     result = context.runner.invoke(nitpicker.main, context.command, catch_exceptions=False)
 
+    if '--has-new-runs' in context.command:
+        context.mock_adapter.diff.assert_called_once_with('HEAD', 'master')
     assert int(status_code) == result.exit_code
 
+
+@given(u'there are no new runs in the feature branch')
+def step_impl(context):
+    context.mock_adapter.diff.return_value = [
+        {
+            'object': '.\\src/some_file.py',
+            'type': 'A'
+        }
+    ]
+
+
+@given(u'there are some new runs in the feature branch')
+def step_impl(context):
+    context.mock_adapter.diff.return_value = [
+        {
+            'object': '.\\test_qa/test_plan1/runs/____run.report',
+            'type': 'A'
+        },
+        {
+            'object': '.\\test_qa/test_plan2/runs/____run.report',
+            'type': 'A'
+        }
+    ]

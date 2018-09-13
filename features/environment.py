@@ -1,23 +1,26 @@
 import os
 import shutil
 from click.testing import CliRunner
-from nitpicker.cvs.cvs_adapter import CVSAdapter
+import nitpicker.nitpicker
 from nitpicker.cvs.cvs_factory import CVSFactory
+from unittest.mock import Mock
 
 
-class MockCVSAdapter(CVSAdapter):
+class MockFactory(CVSFactory):
+    def __init__(self, mock_adapter):
+        self.__mock_adapter = mock_adapter
 
-    def get_user_email(self):
-        return 'mrhankey@gmail.com'
-
-    def get_user_name(self):
-        return 'Mr. Hankey'
+    def create_cvs_adapter(self, cvs='git'):
+        return self.__mock_adapter
 
 
 def before_scenario(context, _):
-    CVSFactory.CVS_ADAPTERS['mock_cvs'] = MockCVSAdapter
+    context.mock_adapter = Mock()
+    context.mock_adapter.get_user_email.return_value = "mrhankey@gmail.com"
+    context.mock_adapter.get_user_name.return_value = "Mr. Hankey"
+    nitpicker.nitpicker.__cvs_factory__ = MockFactory(context.mock_adapter)
 
-    context.test_dir = os.path.join(os.path.dirname(__file__), 'test_qa')
+    context.test_dir = 'test_qa'
     context.runner = CliRunner()
     context.command = ['-d', context.test_dir, '--no-editor',
                        '--report-dir', context.test_dir,
