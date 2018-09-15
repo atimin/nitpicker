@@ -103,3 +103,12 @@ or
 
 
 Currently Nitpicker supports Python 3.3 and newer
+
+
+
+Documentation
+.........................
+
+See the last documentation here_.
+
+.. _here: https://nitpicker.readthedocs.io/en/latest/
