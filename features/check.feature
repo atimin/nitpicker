@@ -22,15 +22,19 @@ Feature: Checking QA test plans for failed cases
     Then we get 0 status code
 
     Scenario: A CI script returns 1 if there are not any new runs in the feature branch
-    Given there are 2 passed cases in "feature_1.plan_1"
-    and there are no new runs in the feature branch
+    Given there are no new runs in the feature branch
     When we input command "check"
     And flag --has-new-runs is added
     Then we get 1 status code
 
     Scenario: A CI script returns 0 if there are some new runs in the feature branch
-    Given there are 2 passed cases in "feature_1.plan_1"
-    and there are some new runs in the feature branch
+    Given there are some new runs in the feature branch
+    When we input command "check"
+    And flag --has-new-runs is added
+    Then we get 0 status code
+
+    Scenario: A CI script returns 0 if there are no changes at all
+    Given there are not changes in the feature branch
     When we input command "check"
     And flag --has-new-runs is added
     Then we get 0 status code

@@ -70,17 +70,16 @@ Now you can run the test plan:
 
     python -m nitpicker run feature_1.plan_1
 
-The program runs all the cases in interactive mode leading the
+The program runs all the cases in the interactive mode leading the
 tester step by step. The results of the run will be written in
-directory *runs* in YAML format. These reports cab be used
-to generate .html, .md., .rst etc human friendly formats.
+directory *runs* in YAML format.
 
 After all the test cases have been run you can push the reports into the git
-repo to a CI server can check if all tests are passed
+repo, so your CI server can check if all the test runs are passed
 
 ::
 
-    python -m nitpicker check
+    python -m nitpicker check --all-runs-passed
     
 
 The project uses itself for testing. You can find *qa* directory in the repo.

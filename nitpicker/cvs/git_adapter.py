@@ -26,8 +26,14 @@ class GitAdapter(CVSAdapter):
     def diff(self, parent_branch):
         try:
             branch = self.__repo.active_branch
+            if branch.commit == self.__repo.commit(parent_branch):
+                return list()
+
             for commit in self.__repo.iter_commits(branch):
-                parent = commit.parents[0] if commit.parents else self.EMPTY_TREE_SHA
+                if commit.parents:
+                    parent = commit.parents[0]
+                else:
+                    break
 
                 if parent == self.__repo.commit(parent_branch):
                     break

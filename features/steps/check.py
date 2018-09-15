@@ -48,9 +48,13 @@ def step_impl(context):
     ]
 
 
+def to_generator(ary):
+    return (x for x in ary)
+
+
 @given(u'there are some new runs in the feature branch')
 def step_impl(context):
-    context.mock_adapter.diff.return_value = [
+    context.mock_adapter.diff.return_value = to_generator([
         {
             'object': 'test_qa/test_plan1/runs/____run.report',
             'type': 'A'
@@ -59,4 +63,9 @@ def step_impl(context):
             'object': 'test_qa/test_plan2/runs/____run.report',
             'type': 'A'
         }
-    ]
+    ])
+
+
+@given(u'there are not changes in the feature branch')
+def step_impl(context):
+    context.mock_adapter.diff.return_value = to_generator([])

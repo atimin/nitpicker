@@ -76,7 +76,12 @@ class CheckCommandHandler:
         click.secho('Check if current branch has new runs.', bold=True)
         click.secho('-----------------------------------')
 
-        diffs = self.__cvs_adapter.diff(self.__main_branch)
+        diffs = list(self.__cvs_adapter.diff(self.__main_branch))
+
+        if len(diffs) == 0:
+            click.secho("There are no changes or it is the main branch", fg='yellow')
+            return True
+
         qa_updates = [update for update in diffs if self.__qa_dir == update['object'][0:len(self.__qa_dir)]]
 
         added_case_count = 0
