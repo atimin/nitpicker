@@ -1,0 +1,15 @@
+created: 2018-09-15 04:54:39
+author: Aleksey Timin
+email: atimin@gmail.com
+description: Checking if all the last runs are passed returns error
+tags: commands
+setup:
+  - Run command 'python -m nitpicker -d test_qa add test_test_case -p commands'
+  - Save the case without changes and close the editor
+  - Run command 'python -m nitpicker -d test_qa run commands' and fail some step
+steps:
+  - Run command 'python -m nitpicker -d test_qa check --all-runs-passed'
+    => It should return error
+
+teardown:
+  - Delete test_qa directory

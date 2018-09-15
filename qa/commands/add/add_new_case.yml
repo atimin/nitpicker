@@ -6,7 +6,7 @@ tags: commands
 setup:
 - Change working directory to the root of the project
 steps:
-- Run command 'python -m nitpicker -r test_qa add test_test_case -p commands'
+- Run command 'python -m nitpicker -d test_qa add test_test_case -p commands'
   => The new case should be opened in the editor
 - Save the case and close the editor
   => File 'test_test_case.yml' should appear in test_qa/commands directory

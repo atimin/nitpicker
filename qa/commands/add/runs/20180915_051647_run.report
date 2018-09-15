@@ -1,0 +1,15 @@
+cases:
+  add_new_case.yml:
+    description: Add a new case
+    finished: '2018-09-15 05:15:46'
+    started: '2018-09-15 05:15:12'
+    status: passed
+  add_new_case_in_force.yml:
+    description: Add a new case in force mode
+    finished: '2018-09-15 05:16:41'
+    started: '2018-09-15 05:15:59'
+    status: passed
+email: atimin@gmail.com
+finished: '2018-09-15 05:16:47'
+started: '2018-09-15 05:15:12'
+tester: Aleksey Timin
