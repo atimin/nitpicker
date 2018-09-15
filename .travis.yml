@@ -15,4 +15,4 @@ script:
   - nose2
   - behave
   - git fetch origin master:master
-  - python -m nitpicker check --qa_updated
+  - python -m nitpicker check --all-runs-passed --has-new-runs

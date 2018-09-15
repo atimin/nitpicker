@@ -94,22 +94,29 @@ class CheckCommandHandler:
             return obj[-7:] == '.report'
 
         for update in qa_updates:
+            obj = update['object'][2:]
             if update['type'] == 'A':
-                if is_case(update['object']):
+                if is_case(obj):
+                    click.secho('Case {} is added'.format(obj), fg='green')
                     added_case_count += 1
-                if is_run(update['object']):
+                if is_run(obj):
+                    click.secho('Run {} is added'.format(obj), fg='green')
                     added_run_count += 1
 
             if update['type'] == 'D':
-                if is_case(update['object']):
+                if is_case(obj):
+                    click.secho('Case {} is deleted'.format(obj), fg='red')
                     deleted_case_count += 1
-                if is_run(update['object']):
+                if is_run(obj):
+                    click.secho('Run {} is deleted'.format(obj), fg='red')
                     deleted_run_count += 1
 
             if update['type'] == 'M':
-                if is_case(update['object']):
+                if is_case(obj):
+                    click.secho('Case {} is changed'.format(obj), fg='blue')
                     modified_case_count += 1
-                if is_run(update['object']):
+                if is_run(obj):
+                    click.secho('Run {} is changed'.format(obj), fg='blue')
                     modified_run_count += 1
 
         click.secho('Current branch has:', bold=True)

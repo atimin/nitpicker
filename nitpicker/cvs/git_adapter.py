@@ -26,14 +26,13 @@ class GitAdapter(CVSAdapter):
     def diff(self, branch, parent_branch):
         try:
             for commit in self.__repo.iter_commits(branch):
-
                 parent = commit.parents[0] if commit.parents else self.EMPTY_TREE_SHA
 
                 if parent == self.__repo.commit(parent_branch):
                     break
 
                 diffs = {
-                    diff.a_path: diff for diff in commit.diff(parent)
+                    diff.a_path: diff for diff in parent.diff(commit)
                 }
 
                 for objpath, stats in commit.stats.files.items():
