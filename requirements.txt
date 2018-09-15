@@ -6,3 +6,4 @@ colorama
 behave
 mako>=1.0
 gitpython>=2.1
+pygments
