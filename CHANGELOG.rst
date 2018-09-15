@@ -1,4 +1,4 @@
-Next Release
+Release 0.3.0
 ---------------------------------
 * #3 Command 'check --all-runs-passed' checks if all of the last runs are passed (@flipback)
 * #3 Command 'check --has-new-runs' checks if there are some new runs in the feature branch (@flipback)
