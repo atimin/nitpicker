@@ -76,7 +76,7 @@ class CheckCommandHandler:
         click.secho('Check if current branch has new runs.', bold=True)
         click.secho('-----------------------------------')
 
-        diffs = self.__cvs_adapter.diff('HEAD', self.__main_branch)
+        diffs = self.__cvs_adapter.diff(self.__main_branch)
 
         qa_updates = [update for update in diffs if '.\\{}'.format(self.__qa_dir) in update['object']]
 

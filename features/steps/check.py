@@ -34,7 +34,7 @@ def step_impl(context, status_code):
     result = context.runner.invoke(nitpicker.main, context.command, catch_exceptions=False)
 
     if '--has-new-runs' in context.command:
-        context.mock_adapter.diff.assert_called_once_with('HEAD', 'master')
+        context.mock_adapter.diff.assert_called_once_with('master')
     assert int(status_code) == result.exit_code
 
 

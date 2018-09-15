@@ -23,8 +23,9 @@ class GitAdapter(CVSAdapter):
         cfg_reader = self.__repo.config_reader()
         return cfg_reader.get_value("user", "email")
 
-    def diff(self, branch, parent_branch):
+    def diff(self, parent_branch):
         try:
+            branch = self.__repo.active_branch
             for commit in self.__repo.iter_commits(branch):
                 parent = commit.parents[0] if commit.parents else self.EMPTY_TREE_SHA
 

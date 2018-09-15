@@ -18,9 +18,9 @@ class CVSAdapter:
         """
         raise NotImplementedError
 
-    def diff(self, branch, parent_branch):
+    def diff(self, parent_branch):
         """
-        Get difference between branch and its parent
+        Get difference between active branch and its parent
 
         :return: Returns a generator of dicts:
         {'insertions': 3,
