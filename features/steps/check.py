@@ -42,7 +42,7 @@ def step_impl(context, status_code):
 def step_impl(context):
     context.mock_adapter.diff.return_value = [
         {
-            'object': '.\\src/some_file.py',
+            'object': 'src/some_file.py',
             'type': 'A'
         }
     ]
@@ -52,11 +52,11 @@ def step_impl(context):
 def step_impl(context):
     context.mock_adapter.diff.return_value = [
         {
-            'object': '.\\test_qa/test_plan1/runs/____run.report',
+            'object': 'test_qa/test_plan1/runs/____run.report',
             'type': 'A'
         },
         {
-            'object': '.\\test_qa/test_plan2/runs/____run.report',
+            'object': 'test_qa/test_plan2/runs/____run.report',
             'type': 'A'
         }
     ]

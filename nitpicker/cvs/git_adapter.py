@@ -45,7 +45,7 @@ class GitAdapter(CVSAdapter):
 
                     # Update the stats with the additional information
                     stats.update({
-                        'object': os.path.join('.', objpath),
+                        'object': os.path.join(objpath),
                         'commit': commit.hexsha,
                         'author': commit.author.email,
                         'timestamp': commit.authored_datetime,

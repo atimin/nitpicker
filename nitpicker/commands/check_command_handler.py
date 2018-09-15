@@ -77,8 +77,7 @@ class CheckCommandHandler:
         click.secho('-----------------------------------')
 
         diffs = self.__cvs_adapter.diff(self.__main_branch)
-
-        qa_updates = [update for update in diffs if '.\\{}'.format(self.__qa_dir) in update['object']]
+        qa_updates = [update for update in diffs if self.__qa_dir == update['object'][0:len(self.__qa_dir)]]
 
         added_case_count = 0
         modified_case_count = 0

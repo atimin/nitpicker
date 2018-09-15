@@ -20,5 +20,4 @@ script:
   - git fetch origin
   - git checkout master
   - git checkout $TRAVIS_BRANCH
-  - git diff master $TRAVIS_BRANCH
   - python -m nitpicker check --all-runs-passed --has-new-runs
