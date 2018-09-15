@@ -3,28 +3,11 @@
 import click
 import os
 import yaml
-from nitpicker import helpers
 from nitpicker.cvs import CVSFactory
-from nitpicker.commands import CheckCommandHandler, RunCommandHandler, ListCommandHandler
+from nitpicker.commands import CheckCommandHandler, RunCommandHandler, ListCommandHandler, AddCommandHandler
 
 __version__ = '0.3.0-dev'
 __cvs_factory__ = CVSFactory()
-
-TEST_CASE_TEMPLATE = '''
-created: {created}
-author: {author_name}
-email: {author_email}
-description: {description}
-tags:
-setup:
-- Do something to start
-steps:
-- Action1 => Expectation1
-- Action2 => Expectation2
-
-teardown:
-- Do something to stop
-'''
 
 
 @click.group()
@@ -71,12 +54,12 @@ def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, cfg_file='.nitpicker.y
 
 @main.command()
 @click.argument('test_case_name')
-@click.option('--plan', '-p', type=str, default='',
+@click.option('--test_plan', '-p', type=str, default='',
               help='Select the test plane in the plan tree separated by dot. Example: feature_1.plan_2')
 @click.option('--force', '-f', type=bool, default=False, is_flag=True,
               help='Replace the old test case with a new one, if it has the same name.')
 @click.pass_context
-def add(ctx, test_case_name, plan, force):
+def add(ctx, test_case_name, test_plan, force):
     """
     Add a new test case to a plan
 
@@ -87,31 +70,15 @@ def add(ctx, test_case_name, plan, force):
 
     In order to override the old test case with a new one use flag --force or -f .
     """
-    case_dir = os.path.join(*([ctx.obj['qa_dir']] + plan.split('.')))
-    case_file_path = os.path.join(case_dir, test_case_name + '.yml')
 
-    if not os.path.exists(case_dir):
-        os.makedirs(case_dir)
+    handler = AddCommandHandler(ctx.obj['qa_dir'],
+                                test_case_name=test_case_name,
+                                test_plan=test_plan,
+                                no_editor=ctx.obj['no_editor'],
+                                cvs_adapter=__cvs_factory__.create_cvs_adapter(ctx.obj['cvs']))
 
-    if not force and os.path.exists(case_file_path):
-        click.echo('Test case "{}" is already created'.format(test_case_name))
-        exit(1)
-
-    data = dict()
-    cvs_adapter = __cvs_factory__.create_cvs_adapter(ctx.obj['cvs'])
-
-    data['created'] = helpers.get_current_time_as_str()
-    data['author_name'] = cvs_adapter.get_user_name()
-    data['author_email'] = cvs_adapter.get_user_email()
-    data['description'] = ''
-
-    text = TEST_CASE_TEMPLATE.format(**data)
-    if not ctx.obj['no_editor']:
-        text = click.edit(text, extension='.yml', )
-
-    if text:
-        f = open(case_file_path, 'w', encoding='utf-8')
-        f.write(text)
+    success = handler.add_new_case(force)
+    exit(0 if success else 1)
 
 
 @main.command()

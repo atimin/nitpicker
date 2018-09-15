@@ -1,3 +1,5 @@
 from nitpicker.commands.check_command_handler import CheckCommandHandler
 from nitpicker.commands.run_command_handler import RunCommandHandler
 from nitpicker.commands.list_command_handler import ListCommandHandler
+from nitpicker.commands.add_command_handler import AddCommandHandler
+

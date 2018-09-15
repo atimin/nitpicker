@@ -2,7 +2,7 @@
 import os
 import yaml
 import mako.template
-from nitpicker import helpers
+from nitpicker.commands import helpers
 
 
 class ReportGenerator:

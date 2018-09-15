@@ -2,7 +2,7 @@ import os
 import yaml
 import click
 import time
-from nitpicker import helpers
+from nitpicker.commands import helpers
 from nitpicker.report_generator import ReportGenerator
 
 

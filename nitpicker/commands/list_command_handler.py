@@ -5,7 +5,7 @@ import yaml
 
 class ListCommandHandler:
     """
-    Represents list command
+    Implements 'list' command
     """
     def __init__(self, qa_dir):
         """
@@ -15,7 +15,7 @@ class ListCommandHandler:
 
     def show_test_case_tree(self):
         """
-        Show the tree of the test plans
+        Shows the tree of the test plans
         """
 
         def calc_plans(path):
