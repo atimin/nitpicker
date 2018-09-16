@@ -1,3 +1,7 @@
+Release 0.4.0-dev
+---------------------------------
+* Nitpicker can be run as a command (`nitpicker` instead of `python -m nitpicker) (@flipback)
+
 Release 0.3.0
 ---------------------------------
 * #3 Command 'check --all-runs-passed' checks if all of the last runs are passed (@flipback)

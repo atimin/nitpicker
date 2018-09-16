@@ -99,10 +99,13 @@ or
 
 ::
 
-    python -m install nitpicker
+    python -m pip install nitpicker
 
 
-Currently Nitpicker supports Python 3.3 and newer
+Currently Nitpicker supports Python 3.3 and newer.
+
+If you are a Windows user and you would like to use Nitpicker as a command (run `nitpicker` instead
+of `python -m nitpicker`) you should add Script directory of your Python to PATH variable.
 
 
 
