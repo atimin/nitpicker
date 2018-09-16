@@ -1,8 +1,8 @@
 Nitpicker's Workflow
 =============================
 
-Nitpicker is created to provide testers and developers common workflow and it's supposed that the QA
-tests are stored with the source code in CVS repository and new features are developed in the separated
+Nitpicker is created to provide testers and developers common workflow and it's supposed that the use test
+cases are stored with the source code in CVS repository and new features are developed in the separated
 branches:
 
 ::

@@ -13,7 +13,7 @@ __cvs_factory__ = CVSFactory()
 @click.group()
 @click.version_option(version=__version__, prog_name='nitpicker')
 @click.option('--qa-dir', '-d', type=str, default=None,
-              help='QA directory where you store all your test plan and cases. Default: qa')
+              help='QA directory where you store all your test plans and cases. Default: qa')
 @click.option('--no-editor', type=bool, default=None, is_flag=True,
               help='Not use the system editor when you create a new test case')
 @click.option('--report-dir', default=None,

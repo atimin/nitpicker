@@ -3,7 +3,7 @@
 Test Storing
 ========================
 
-Nitpicker provides storing test cases as files in YAML format:
+Nitpicker provides storing black-box test cases as files in YAML format:
 
 ::
 
@@ -19,7 +19,7 @@ Nitpicker provides storing test cases as files in YAML format:
              |-20180820_232000_run.report
              |-20180820_232010_run.report
 
-Directory *qa* is the root directory of all the QA tests (QA directory). It contains all tests plans and its test cases and test run reports as well. Test plans are represented by directories which include other test plans directory and test cases. So we have some hierarchy of the test plans.
+Directory *qa* is the root directory of all the black-box tests (QA directory). It contains all tests plans and its test cases and test run reports as well. Test plans are represented by directories which include other test plans directory and test cases. So we have some hierarchy of the test plans.
 
 Each plan contains all its run reports in directory `runs`.
 

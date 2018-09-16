@@ -1,7 +1,7 @@
 Nitpicker
 -------------------------
 
-Nitpicker is a CLI tool for QA written in Python
+Nitpicker is a CLI tool for black-box testing written in Python
 
 .. image:: https://travis-ci.org/flipback/nitpicker.svg?branch=master
     :target: https://travis-ci.org/flipback/nitpicker
@@ -11,20 +11,20 @@ Motivation
 ........................
 
 The project has been started to fix some problems that
-many developers and testers might be familiar to:
+many developers and testers, who practice black-box testing, might be familiar to:
 
-1. QA tests are not under version control with the code. Why not?
-As developers, we would like to do some review of tests like code
-review. As a manger I would be calm knowing that all QA plans and cases
-are stored with the code on Git repository always available.
+1. Black-box testing are not under version control with the code. Why not?
+As developers, we would like to do some review of test cases like code
+review. As a manger I would be calm knowing that all the test plans and cases
+are stored with the code on Git repository and are always available.
 
-2. QA tests stay apart from the develop cycle. I can ban a merge
+2. Black-box testing stays apart from the develop cycle. I can ban a merge
 request if it breaks my unit or integration tests because I see
 it at once by using CI tools. I believe it is possible for manual
 tests too. I want my CI tool to check if a tester do all
 the needed tests.
 
-3. A QA tool should be interactive. When you see a whole test
+3. A testing tool should be interactive. When you see a whole test
 case with all the steps it is hard not to jump between them trying
 to do test as fast as possible. When a tester is in a dialogue with
 a tool and goes step-by-step, they can test more carefully. Especially,
@@ -33,7 +33,7 @@ if the tool keep time tracking automatically.
 
 How does it work?
 .........................
-All your tests and run reports are stored in YAML
+All your test cases and run reports are stored in YAML
 format with the code which they test.
 
 ::
@@ -54,7 +54,7 @@ format with the code which they test.
 
 
 
-Nitpicker provides command to create a test case:
+Nitpicker provides command to create a test case in the given test plan:
 
 ::
 
