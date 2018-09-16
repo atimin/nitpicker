@@ -32,9 +32,11 @@ Feature: Checking QA test plans for failed cases
     When we input command "check"
     And flag --has-new-runs is added
     Then we get 0 status code
+    And the current branch compared with master
 
     Scenario: A CI script returns 0 if there are no changes at all
     Given there are not changes in the feature branch
     When we input command "check"
     And flag --has-new-runs is added
     Then we get 0 status code
+    And the current branch compared with master

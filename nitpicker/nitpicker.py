@@ -4,7 +4,7 @@ import click
 import os
 import yaml
 from nitpicker.cvs import CVSFactory
-from nitpicker.commands import CheckCommandHandler, RunCommandHandler, ListCommandHandler, AddCommandHandler
+from nitpicker.commands import *
 
 __version__ = '0.4.0-dev'
 __cvs_factory__ = CVSFactory()
@@ -138,3 +138,13 @@ def check(ctx, all_runs_passed, has_new_runs):
         success &= handler.check_has_new_runs()
 
     exit(0 if success else 1)
+
+
+@main.command()
+@click.pass_context
+def validate(ctx):
+    """
+    Validate the format of all the test cases in QA directory
+    """
+    handler = ValidateCommandHandler()
+    exit(0 if handler.validate() else 1)
