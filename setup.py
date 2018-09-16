@@ -26,5 +26,8 @@ setup(
         'mako>=1.0',
         'gitpython>=2.1'
     ],
+    entry_points={
+        'console_scripts': ['nitpicker=nitpicker:main']
+    }
 )
 
