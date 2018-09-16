@@ -76,7 +76,7 @@ class RunCommandHandler:
                         report['cases'][f]['status'] = 'failed'
                         report['cases'][f]['failed_step'] = step
                         report['cases'][f]['failed_action'] = action
-                        report['cases'][f]['failed_reaction'] = expectation
+                        report['cases'][f]['failed_expectation'] = expectation
                         report['cases'][f]['finished'] = helpers.get_current_time_as_str()
                         break
                     else:
