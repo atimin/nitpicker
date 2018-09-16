@@ -1,19 +1,21 @@
 Nitpicker's Workflow
 =============================
 
-Nitpicker is created to testers and developer have common workflow and it's supposed that the QA
+Nitpicker is created to provide testers and developers common workflow and it's supposed that the QA
 tests are stored with the source code in CVS repository and new features are developed in the separated
 branches:
 
 ::
 
-    new_feature  master
-        |         |
-        *         *
-        |         |
-        *         |
-        |         |
-        +---------*
+    new_feature
+        |
+        |
+        *   master
+        |     |
+        *     |
+        |     |
+        +-----*
+              |
 
 
 Step 1. Add new test cases
@@ -47,13 +49,14 @@ cases:
               |
               | new_feature
               |     |
-              |     *      master
-              |     |         |
-              ------*         *
-                    |         |
-                    *         |
-                    |         |
-                    +---------*
+              |     *   master
+              |     |     |
+              +-----*     *
+                    |     |
+                    *     |
+                    |     |
+                    +-----*
+                          |
 
 A test plan can contain test cases as many as you wants. And the tester can repeat command
 *python -m nitpicker add* for each test case or copy and rename the file of the first one.
@@ -88,7 +91,7 @@ Nitpicker provides some features for it too (see :ref:`ci`).
 Step 3. Merging
 ............................
 
-After step 2 the repository has the following graph:
+After step 2 the repository has the following commits:
 
 ::
 
@@ -100,13 +103,14 @@ After step 2 the repository has the following graph:
               |
               | new_feature
               |     |
-              |     *      master
-              |     |         |
-              ------*         *
-                    |         |
-                    *         |
-                    |         |
-                    +---------*
+              |     *   master
+              |     |     |
+              +-----*     *
+                    |     |
+                    *     |
+                    |     |
+                    +-----*
+                          |
 
 
 If all the tests are passed and the CI pipeline has no errors the maintainer can merge the branches
