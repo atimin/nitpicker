@@ -61,7 +61,7 @@ All test case files should have the following mapping:
 * *description* - The short description of the case that should be displayed in all reports
 * *tags* - The tags separated by comma (not implemented yet)
 * *setup* - The actions that should be done before the test starts
-* *steps* - The steps that contains the tester's actions and the expectations separated by symbol '=>'
+* *steps* - The steps that contain the tester's actions and the expectations separated by symbol '=>'
 * *teardown* - The actions that should be done after the test has been run
 
 Run Report Format
