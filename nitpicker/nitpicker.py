@@ -146,5 +146,5 @@ def validate(ctx):
     """
     Validate the format of all the test cases in QA directory
     """
-    handler = ValidateCommandHandler()
+    handler = ValidateCommandHandler(ctx.obj['qa_dir'])
     exit(0 if handler.validate() else 1)
