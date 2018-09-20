@@ -25,8 +25,8 @@ class ValidateCommandHandler:
                 Optional('tags'): Or(None, And(Use(str), lambda s: len(s) >= 0)),
                 'setup': And(list),
                 'steps': And(Use(list), lambda steps: all('=>' in s for s in steps),
-                             error='Steps should be array of string '
-                             'and contain "=>" to separate'
+                             error='Steps should be array of strings '
+                             'and contain "=>" to separate '
                              'actions and expectations'),
                 'teardown': And(list)
             }

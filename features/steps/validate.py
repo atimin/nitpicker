@@ -14,6 +14,18 @@ def step_impl(context, key):
     with open(test_case_file, 'w') as f:
         yaml.dump(data, f)
 
+
+@given(u'a plan has a test case with empty {key}')
+def step_impl(context, key):
+    test_case_file = add_test_case(context)
+    with open(test_case_file, 'r') as f:
+        data = yaml.load(f)
+        data[key] = None
+
+    with open(test_case_file, 'w') as f:
+        yaml.dump(data, f)
+
+
 @given(u'a plan has a valid test')
 def step_impl(context):
     add_test_case(context)
@@ -24,6 +36,18 @@ def step_impl(context):
     test_case_file = add_test_case(context)
     with open(test_case_file, 'w') as f:
         f.write("\tsomething but not YAML")
+
+
+@given(u'a plan has a test case with no "=>" in step')
+def step_impl(context):
+    test_case_file = add_test_case(context)
+    with open(test_case_file, 'r') as f:
+        data = yaml.load(f)
+        data['steps'][0] = "Action : Expectation"
+
+    with open(test_case_file, 'w') as f:
+        yaml.dump(data, f)
+
 
 
 def add_test_case(context):

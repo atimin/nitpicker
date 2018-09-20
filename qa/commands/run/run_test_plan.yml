@@ -10,7 +10,7 @@ setup:
 - Close the editor
 steps:
 - Run command 'python -m nitpicker -d test_qa run commands'
-	=> You should see message 'Start test test_test_case.yml - None? [Y/n]'
+  => You should see message 'Start test test_test_case.yml - None? [Y/n]'
 - Press 'y' + Enter
   => You should see the action and reaction of the first step
 - Press 'y' + Enter
