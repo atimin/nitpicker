@@ -2,6 +2,7 @@
 created: 2018-08-26 07:43:06
 author: Aleksey Timin
 description: Run a test plan and pass all tests
+email: atimin@gmail.com
 tags: commands
 setup:
 - Run command 'python -m nitpicker -d test_qa add test_test_case -p commands'
@@ -9,7 +10,7 @@ setup:
 - Close the editor
 steps:
 - Run command 'python -m nitpicker -d test_qa run commands'
-  => You should see message 'Start test test_test_case.yml - None? [Y/n]'
+	=> You should see message 'Start test test_test_case.yml - None? [Y/n]'
 - Press 'y' + Enter
   => You should see the action and reaction of the first step
 - Press 'y' + Enter
