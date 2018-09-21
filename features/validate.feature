@@ -41,3 +41,8 @@ Feature: Validate all test cases
     Given a plan has a test case with no "=>" in step
     When we input command "validate"
     Then we get 1 status code
+
+    Scenario: A test with empty required fields isn't run
+    Given a plan has a test case with empty <not_empty>
+    When we input command "run some_plan"
+    Then we get 1 status code

@@ -46,12 +46,6 @@ Feature: Run a test plan
         Then we got a report in "test_plan/runs"
         And the report has comment "Something wrong" in 2 step of 1 case
 
-    Scenario: QA report is updated after each run
-        Given there is "test_plan" with 2 cases
-        When we input command "run test_plan"
-        And pass all steps of all cases
-        Then we got QA report in root directory
-
     Scenario: A run report gets useranme and email from CVS
         Given there is "test_plan" with 2 cases
         When we input command "run test_plan"

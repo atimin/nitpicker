@@ -87,8 +87,12 @@ def list(ctx):
     """
     Show the tree of the test plans
     """
-    handler = ListCommandHandler(ctx.obj['qa_dir'])
-    handler.show_test_case_tree()
+    handler = ValidateCommandHandler(ctx.obj['qa_dir'])
+    if handler.validate():
+        handler = ListCommandHandler(ctx.obj['qa_dir'])
+        handler.show_test_case_tree()
+    else:
+        exit(1)
 
 
 @main.command()
@@ -104,12 +108,18 @@ def run(ctx, test_plan):
     and run all the test cases in it. After the running it saves a report in YAML format
     with name '%Y%m%d_%H%M%S_run.report'
     """
-    handler = RunCommandHandler(ctx.obj['qa_dir'],
-                                cvs_adapter=__cvs_factory__.create_cvs_adapter(ctx.obj['cvs']),
-                                test_plan=test_plan,
-                                report_dir=ctx.obj['report_dir'])
 
-    handler.run_test_cases()
+    handler = ValidateCommandHandler(ctx.obj['qa_dir'])
+    if handler.validate():
+        handler = RunCommandHandler(ctx.obj['qa_dir'],
+                                    cvs_adapter=__cvs_factory__.create_cvs_adapter(ctx.obj['cvs']),
+                                    test_plan=test_plan,
+                                    report_dir=ctx.obj['report_dir'])
+
+        handler.run_test_cases()
+
+    else:
+        exit(1)
 
 
 @main.command()
