@@ -8,7 +8,8 @@ Contents
    :maxdepth: 2
 
    index
-   test_storing.rst
+   test_storing
+   settings
    workflow
    ci
 
