@@ -85,7 +85,13 @@ repo, so your CI server can check if all the test runs are passed
 The project uses itself for testing. You can find *qa* directory in the repo.
 Also you can run some plans for demonstration.
 
+Features
+.........................
 
+* CLI interface to create, run, validate and check user tests
+* Run tests in an interactive mode
+* Storing user tests and run reports as files in YAML format
+* Integration with version control systems (currently only **git**)
 
 Installation
 .........................
@@ -108,6 +114,14 @@ If you are a Windows user and you would like to use Nitpicker as a command (run 
 of `python -m nitpicker`) you should add Script directory of your Python to PATH variable.
 
 
+Usage
+.........................
+
+In order to start:
+
+::
+
+    python -m nitpicker --help
 
 Documentation
 .........................
