@@ -101,4 +101,5 @@ class RunCommandHandler:
                       'w', encoding='utf-8') as report_file:
                 yaml.dump(report, report_file, default_flow_style=False, allow_unicode=True)
 
-            ReportGenerator('md').generate(self.__qa_dir, report_dir=self.__report_dir)
+            # TODO: Should be replaced in special command
+            # ReportGenerator('md').generate(self.__qa_dir, report_dir=self.__report_dir)
