@@ -1,0 +1,17 @@
+created: 2018-09-21 07:18:06
+author: Aleksey Timin
+description: Validate all tests
+email: atimin@gmail.com
+tags: commands
+setup:
+- Run command 'python -m nitpicker -d test_qa add test_test_case_1 -p commands'
+- Save the case without changes and close the editor
+steps:
+- Run command 'python -m nitpicker -d test_qa add test_test_case_2 -p commands'
+  => The case is opened in the text editor
+- Delete author field, save and close editor
+  => The editor is closed
+- Run command 'python -m nitpicker -d test_qa validate'
+  => You see message that key 'author' is missed
+teardown:
+- Delete test_qa directory
