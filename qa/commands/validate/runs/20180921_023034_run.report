@@ -1,0 +1,9 @@
+cases:
+  validate_all_tests.yml:
+    description: Validate all tests
+    started: '2018-09-21 02:30:30'
+    status: skipped
+email: atimin@gmail.com
+finished: '2018-09-21 02:30:34'
+started: '2018-09-21 02:30:30'
+tester: Aleksey Timin

@@ -2,6 +2,7 @@
 created: 2018-08-26 07:43:06
 author: Aleksey Timin
 description: Run a test plan and pass all tests
+email: atimin@gmail.com
 tags: commands
 setup:
 - Run command 'python -m nitpicker -d test_qa add test_test_case -p commands'

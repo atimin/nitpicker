@@ -76,7 +76,7 @@ class RunCommandHandler:
                         report['cases'][f]['status'] = 'failed'
                         report['cases'][f]['failed_step'] = step
                         report['cases'][f]['failed_action'] = action
-                        report['cases'][f]['failed_reaction'] = expectation
+                        report['cases'][f]['failed_expectation'] = expectation
                         report['cases'][f]['finished'] = helpers.get_current_time_as_str()
                         break
                     else:
@@ -101,4 +101,5 @@ class RunCommandHandler:
                       'w', encoding='utf-8') as report_file:
                 yaml.dump(report, report_file, default_flow_style=False, allow_unicode=True)
 
-            ReportGenerator('md').generate(self.__qa_dir, report_dir=self.__report_dir)
+            # TODO: Should be replaced in special command
+            # ReportGenerator('md').generate(self.__qa_dir, report_dir=self.__report_dir)

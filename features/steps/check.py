@@ -29,13 +29,9 @@ def step_impl(context, count, case_status, plan):
             yaml.dump(report, f)
 
 
-@then(u'we get {status_code} status code')
-def step_impl(context, status_code):
-    result = context.runner.invoke(nitpicker.main, context.command, catch_exceptions=False)
-
-    if '--has-new-runs' in context.command:
-        context.mock_adapter.diff.assert_called_once_with('master')
-    assert int(status_code) == result.exit_code
+@then(u'the current branch compared with {main_branch}')
+def step_impl(context, main_branch):
+    context.mock_adapter.diff.assert_called_once_with(main_branch)
 
 
 @given(u'there are no new runs in the feature branch')

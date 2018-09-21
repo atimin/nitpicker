@@ -24,7 +24,8 @@ setup(
         'colorama>=0.3.9',
         'pyyaml>=3.13',
         'mako>=1.0',
-        'gitpython>=2.1'
+        'gitpython>=2.1',
+        'schema>=0.6'
     ],
     entry_points={
         'console_scripts': ['nitpicker=nitpicker:main']
