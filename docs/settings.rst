@@ -11,6 +11,7 @@ the following options:
 * **no_editor** - if set in *true*, a new test is not opened in a text editor after command 'add' (default: false)
 * **cvs** - the type of CVS, currently only git is supported (default: 'git')
 * **main_branch** - the main branch, where all new feature branch are to merge (default: 'master'). See :ref:`ci` for more information.
+* **debug** - if set in *true* all commands run in debug mode with a lot of messages
 
 A setting file's example:
 
