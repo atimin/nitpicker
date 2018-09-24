@@ -1,17 +1,23 @@
-### All Submissions:
+* **Please check if the PR fulfills these requirements**
+- [ ] The commit message follows our guidelines
+- [ ] Tests for the changes have been added (for bug fixes / features)
+- [ ] Docs have been added / updated (for bug fixes / features)
 
-* [ ] Have you followed the guidelines in our Contributing document?
-* [ ] Have you checked to ensure there aren't other open [Pull Requests](../../pulls) for the same update/change?
 
-<!-- You can erase any parts of this template not applicable to your Pull Request. -->
+* **What kind of change does this PR introduce?** (Bug fix, feature, docs update, ...)
 
-### New Feature Submissions:
 
-1. [ ] Does your submission pass tests?
-2. [ ] Have you lint your code locally prior to submission?
 
-### Changes to Core Features:
+* **What is the current behavior?** (You can also link to an open issue here)
 
-* [ ] Have you added an explanation of what your changes do and why you'd like us to include them?
-* [ ] Have you written new tests for your core changes, as applicable?
-* [ ] Have you successfully ran tests with your changes locally?
+
+
+* **What is the new behavior (if this is a feature change)?**
+
+
+
+* **Does this PR introduce a breaking change?** (What changes might users need to make in their application due to this PR?)
+
+
+
+* **Other information**:
