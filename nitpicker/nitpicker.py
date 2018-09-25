@@ -124,11 +124,10 @@ def run(ctx, test_plan, only):
         handler = RunCommandHandler(ctx.obj['qa_dir'],
                                     cvs_adapter=__cvs_factory__.create_cvs_adapter(ctx.obj['cvs']),
                                     test_plan=test_plan,
-                                    report_dir=ctx.obj['report_dir'],
-                                    only=only,
+                                    report_dir=ctx.obj['report_dir']                                    ,
                                     debug=ctx.obj['debug'])
 
-        handler.run_test_cases()
+        handler.run_test_cases(only=only)
 
     else:
         exit(1)

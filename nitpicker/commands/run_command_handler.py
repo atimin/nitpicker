@@ -10,7 +10,7 @@ class RunCommandHandler:
     """
     Implements 'run' command
     """
-    def __init__(self, qa_dir, cvs_adapter, test_plan, report_dir, only=None, debug=False):
+    def __init__(self, qa_dir, cvs_adapter, test_plan, report_dir, debug=False):
         """
         :param qa_dir: The QA dir where it searches runs
         :param cvs_adapter: CVS adapter to access to Repo
@@ -23,20 +23,20 @@ class RunCommandHandler:
         self.__cvs_adapter = cvs_adapter
         self.__test_plan = test_plan
         self.__report_dir = report_dir
-        self.__only = only
         self.__debug = debug
 
-    def run_test_cases(self):
+    def run_test_cases(self, only):
         """
         Runs a test plan
+        :param only: The list of the test cases which should be run separated by comma
         :return: None
         """
         case_dir = os.path.join(*([self.__qa_dir] + self.__test_plan.split('.')))
         self.debug('Get the case dir {}', case_dir)
 
         only_cases = None
-        if self.__only is not None and len(self.__only) > 0:
-            only_cases = [c + '.yml' for c in self.__only.split(',')]
+        if only is not None and len(only) > 0:
+            only_cases = [c + '.yml' for c in only.split(',')]
             self.debug('Only option is on')
             self.debug('Run only {}', only_cases)
 
