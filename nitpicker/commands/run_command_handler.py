@@ -42,7 +42,7 @@ class RunCommandHandler:
 
         for qa_dir, _, cases in os.walk(case_dir):
             self.debug('Look for test cases in  {}', qa_dir)
-            cases = [c for c in cases if '.yml' in c]
+            cases = sorted((c for c in cases if '.yml' in c), reverse=False)
 
             if len(cases) == 0:
                 self.debug('Found no cases')
