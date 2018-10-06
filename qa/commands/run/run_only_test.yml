@@ -1,0 +1,19 @@
+created: 2018-10-06 11:03:08
+author: Aleksey Timin
+email: atimin@gmail.com
+description: Run only one test from a test plan
+tags: commands
+setup:
+- Run command 'python -m nitpicker -d test_qa add test_test_case_1 -p commands.command_1'
+- Save the case without changes
+- Close the editor
+- Run command 'python -m nitpicker -d test_qa add test_test_case_2 -p commands.command_2'
+- Save the case without changes
+- Close the editor
+steps:
+- Run command 'python -m nitpicker -d test_qa run commands --only test_test_case_2'
+  => You should see message 'Start test test_test_case_2.yml - None? [Y/n]'
+- Pass all steps and press any key at the end
+  => The run is finished (no more tests)
+teardown:
+- Delete test_qa directory

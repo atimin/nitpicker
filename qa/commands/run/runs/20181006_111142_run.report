@@ -1,0 +1,15 @@
+cases:
+  run_only_test.yml:
+    description: Run only one test from a test plan
+    finished: '2018-10-06 11:10:41'
+    started: '2018-10-06 11:09:03'
+    status: passed
+  run_test_plan.yml:
+    description: Run a test plan and pass all tests
+    finished: '2018-10-06 11:11:41'
+    started: '2018-10-06 11:10:44'
+    status: passed
+email: atimin@gmail.com
+finished: '2018-10-06 11:11:42'
+started: '2018-10-06 11:09:03'
+tester: Aleksey Timin
