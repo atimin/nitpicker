@@ -1,4 +1,4 @@
-Release 0.4.0-dev
+Release 0.4.0
 ---------------------------------
 * Add flag --only for 'run' command (@flipback)
 * Add command 'validate' to check format of all the test on QA directory (@flipback)

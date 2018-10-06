@@ -5,7 +5,7 @@ import yaml
 from nitpicker.cvs import CVSFactory
 from nitpicker.commands import *
 
-__version__ = '0.4.0-dev'
+__version__ = '0.4.0'
 __cvs_factory__ = CVSFactory()
 
 
