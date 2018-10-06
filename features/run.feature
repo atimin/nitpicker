@@ -1,20 +1,20 @@
 Feature: Run a test plan
 
-    Scenario: A report has all cases passed
+    Scenario: A run report has all cases passed
         Given there is "test_plan" with 2 cases
         When we input command "run test_plan"
         And pass all steps of all cases
         Then we got a report in "test_plan/runs"
         And the report has 2 case(s) passed
 
-    Scenario: A report has one case skipped
+    Scenario: A run report has one case skipped
         Given there is "test_plan" with 2 cases
         When we input command "run test_plan"
         And skip a case
         Then we got a report in "test_plan/runs"
         And the report has 1 case(s) skipped
 
-    Scenario: A report has one case failed
+    Scenario: A run report has one case failed
         Given there is "test_plan" with 2 cases
         When we input command "run test_plan"
         And fail 2 step of 1 case
@@ -53,3 +53,11 @@ Feature: Run a test plan
         Then we got a report in "test_plan/runs"
         And the report has "tester" equals "Mr. Hankey"
         And the report has "email" equals "mrhankey@gmail.com"
+
+    Scenario: A user run only specified tests
+        Given there is "test_plan" with 2 cases
+        When we input command "run test_plan"
+        And option -o is set with "new_case_1"
+        And pass all steps of all cases
+        Then we got a report in "test_plan/runs"
+        And the report has 1 case(s) passed

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import click
-import os
 import yaml
 from nitpicker.cvs import CVSFactory
 from nitpicker.commands import *
@@ -20,15 +19,19 @@ __cvs_factory__ = CVSFactory()
               help='Report directory where the QA report should be created: Default: working directory')
 @click.option('--cvs', default=None,
               help='CVS of the project. Default: git')
+@click.option('--debug', type=bool, default=None, is_flag=True,
+              help='Launch in debug mode')
+@click.option('--main-branch', type=str, default=None,
+              help='Main branch in CVS repo where new features are to merge into')
 @click.pass_context
-def main(ctx, qa_dir, no_editor, report_dir, cvs):
+def main(ctx, qa_dir, no_editor, report_dir, cvs, debug, main_branch):
     """
-    Nitpicker is a CLI tool for QA testing
+    Nitpicker is a CLI tool for black-box testing
     """
-    __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs)
+    __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, debug, main_branch)
 
 
-def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, cfg_file='.nitpicker.yml'):
+def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, debug, main_branch, cfg_file='.nitpicker.yml'):
     ctx.obj = dict()
     user_config = None
 
@@ -49,7 +52,8 @@ def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, cfg_file='.nitpicker.y
     init_config_param('no_editor', no_editor, False)
     init_config_param('report_dir', report_dir, '')
     init_config_param('cvs', cvs, 'git')
-    init_config_param('main_branch', None, 'master')
+    init_config_param('main_branch', main_branch, 'master')
+    init_config_param('debug', debug, False)
 
 
 @main.command()
@@ -97,16 +101,23 @@ def list(ctx):
 
 @main.command()
 @click.argument('test_plan')
+@click.option('--only', '-o', type=str, default=None,
+              help='Run only specified cases in the plan')
 @click.pass_context
-def run(ctx, test_plan):
+def run(ctx, test_plan, only):
     """
     Run a test plan in the plan tree separated by dot
 
     Example: nitpicker run some_feature.plan_1.set_1
 
-    The program tries to find directory 'qa/some_feature/plan_1/set_2\ in the working directory
+    The program tries to find directory 'qa/some_feature/plan_1/set_2' in the working directory
     and run all the test cases in it. After the running it saves a report in YAML format
     with name '%Y%m%d_%H%M%S_run.report'
+
+    You can run only specified cases in the plan by using option --only. You should list the cases separating
+    them with comma and without spaces
+
+    Example: nitpicker run sum_features --only test1,test2,test3
     """
 
     handler = ValidateCommandHandler(ctx.obj['qa_dir'])
@@ -114,9 +125,10 @@ def run(ctx, test_plan):
         handler = RunCommandHandler(ctx.obj['qa_dir'],
                                     cvs_adapter=__cvs_factory__.create_cvs_adapter(ctx.obj['cvs']),
                                     test_plan=test_plan,
-                                    report_dir=ctx.obj['report_dir'])
+                                    report_dir=ctx.obj['report_dir'],
+                                    debug=ctx.obj['debug'])
 
-        handler.run_test_cases()
+        handler.run_test_cases(only=only)
 
     else:
         exit(1)
