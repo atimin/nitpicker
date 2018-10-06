@@ -1,5 +1,6 @@
 Release 0.4.0-dev
 ---------------------------------
+* Add option --only for 'run' command (@flipback)
 * Add command 'validate' to check format of all the test on QA directory (@flipback)
 * #11 Fix validation error in command list (@flipback)
 * Nitpicker can be run as a command (`nitpicker` instead of `python -m nitpicker) (@flipback)
