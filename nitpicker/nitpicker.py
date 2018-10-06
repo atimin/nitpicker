@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import click
-import os
 import yaml
 from nitpicker.cvs import CVSFactory
 from nitpicker.commands import *
@@ -22,15 +21,17 @@ __cvs_factory__ = CVSFactory()
               help='CVS of the project. Default: git')
 @click.option('--debug', type=bool, default=None, is_flag=True,
               help='Launch in debug mode')
+@click.option('--main-branch', type=str, default=None,
+              help='Main branch in CVS repo where new features are to merge into')
 @click.pass_context
-def main(ctx, qa_dir, no_editor, report_dir, cvs, debug):
+def main(ctx, qa_dir, no_editor, report_dir, cvs, debug, main_branch):
     """
-    Nitpicker is a CLI tool for QA testing
+    Nitpicker is a CLI tool for black-box testing
     """
-    __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, debug)
+    __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, debug, main_branch)
 
 
-def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, debug, cfg_file='.nitpicker.yml'):
+def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, debug, main_branch, cfg_file='.nitpicker.yml'):
     ctx.obj = dict()
     user_config = None
 
@@ -51,7 +52,7 @@ def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, debug, cfg_file='.nitp
     init_config_param('no_editor', no_editor, False)
     init_config_param('report_dir', report_dir, '')
     init_config_param('cvs', cvs, 'git')
-    init_config_param('main_branch', None, 'master')
+    init_config_param('main_branch', main_branch, 'master')
     init_config_param('debug', debug, False)
 
 
@@ -100,7 +101,7 @@ def list(ctx):
 
 @main.command()
 @click.argument('test_plan')
-@click.option('--only', type=str, default=None,
+@click.option('--only', '-o', type=str, default=None,
               help='Run only specified cases in the plan')
 @click.pass_context
 def run(ctx, test_plan, only):
@@ -124,7 +125,7 @@ def run(ctx, test_plan, only):
         handler = RunCommandHandler(ctx.obj['qa_dir'],
                                     cvs_adapter=__cvs_factory__.create_cvs_adapter(ctx.obj['cvs']),
                                     test_plan=test_plan,
-                                    report_dir=ctx.obj['report_dir']                                    ,
+                                    report_dir=ctx.obj['report_dir'],
                                     debug=ctx.obj['debug'])
 
         handler.run_test_cases(only=only)
