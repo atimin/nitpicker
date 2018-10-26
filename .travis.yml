@@ -1,6 +1,3 @@
-os:
-  - linux
-  - windows
 git:
   depth: false
   sparse_checkout: false
