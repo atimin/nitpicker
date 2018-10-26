@@ -20,7 +20,7 @@ class TestCfgFile(unittest.TestCase):
         self.assertEqual(self.__ctx.obj['qa_dir'], 'test_qa')
         self.assertEqual(self.__ctx.obj['no_editor'], True)
         self.assertEqual(self.__ctx.obj['report_dir'], 'test_report')
-        self.assertEqual(self.__ctx.obj['cvs'], 'test_cvs')
+        self.assertEqual(self.__ctx.obj['vcs'], 'test_vcs')
         self.assertEqual(self.__ctx.obj['debug'],  True)
         self.assertEqual(self.__ctx.obj['main_branch'], 'test_branch')
 
@@ -32,7 +32,7 @@ class TestCfgFile(unittest.TestCase):
         self.assertEqual(self.__ctx.obj['qa_dir'], 'option_dir')
         self.assertEqual(self.__ctx.obj['no_editor'], False)
         self.assertEqual(self.__ctx.obj['report_dir'], 'option_report')
-        self.assertEqual(self.__ctx.obj['cvs'], 'option_cvs')
+        self.assertEqual(self.__ctx.obj['vcs'], 'option_cvs')
         self.assertEqual(self.__ctx.obj['debug'], False)
         self.assertEqual(self.__ctx.obj['main_branch'], 'option_branch')
 
@@ -44,7 +44,7 @@ class TestCfgFile(unittest.TestCase):
         self.assertEqual(self.__ctx.obj['qa_dir'], 'qa')
         self.assertEqual(self.__ctx.obj['no_editor'], False)
         self.assertEqual(self.__ctx.obj['report_dir'], '')
-        self.assertEqual(self.__ctx.obj['cvs'], 'git')
+        self.assertEqual(self.__ctx.obj['vcs'], 'git')
         self.assertEqual(self.__ctx.obj['debug'], False)
         self.assertEqual(self.__ctx.obj['main_branch'], 'master')
 
@@ -56,6 +56,6 @@ class TestCfgFile(unittest.TestCase):
         self.assertEqual(self.__ctx.obj['qa_dir'], 'qa')
         self.assertEqual(self.__ctx.obj['no_editor'], False)
         self.assertEqual(self.__ctx.obj['report_dir'], '')
-        self.assertEqual(self.__ctx.obj['cvs'], 'git')
+        self.assertEqual(self.__ctx.obj['vcs'], 'git')
         self.assertEqual(self.__ctx.obj['debug'], False)
         self.assertEqual(self.__ctx.obj['main_branch'], 'master')

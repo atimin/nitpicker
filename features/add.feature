@@ -40,7 +40,7 @@ Feature: Adding a new case
     | steps      |  list                |
     | teardown   |  list                |
 
-    Scenario: A user adds new case with its name and email from CVS
+    Scenario: A user adds new case with its name and email from VCS
         Given the test QA directory is empty
         When we input command "add test_test_case1"
         And option -p is set with "feature_1"
