@@ -53,7 +53,7 @@ class ValidateCommandHandler:
         return no_errors
 
     def __validate_case(self, filepath):
-        with open(filepath) as f:
+        with open(filepath, encoding='utf-8') as f:
             data = yaml.load(f)
             self.__schema.validate(data)
 
