@@ -1,3 +1,7 @@
+Release 0.4.1
+---------------------------------
+* #16 Fix encoding error on the validation stage (@flipback)
+
 Release 0.4.0
 ---------------------------------
 * Add flag --only for 'run' command (@flipback)
