@@ -1,0 +1,20 @@
+created: 2018-08-20 17:51:11
+author: Aleksey Timin
+email: atimin@gmail.com
+description: Add a new case with no-ascii symbols
+tags: commands
+setup:
+- Run command 'python -m nitpicker -d test_qa add test_test_case -p commands'
+- Type description with no-ASCII symbols
+- Close the editor
+steps:
+- Run command 'python -m nitpicker -d test_qa run commands'
+  => You should see message with the description which you typed
+- Press 'y' + Enter
+  => You should see the action and reaction of the first step
+- Press 'y' + Enter
+  => You should see green message PASSED and the action and reaction of the second step
+- Press 'y' + Enter
+  => You should see green message PASSED
+teardown:
+- Delete test_qa directory
