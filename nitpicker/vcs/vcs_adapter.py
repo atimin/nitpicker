@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
-class CVSAdapter:
+class VCSAdapter:
     """
-    Interface for getting information from CVS repo and settings
+    Interface for getting information from VCS repo and settings
     """
 
     def get_user_name(self):
         """
-        Get user's name from CVS settings
+        Get user's name from VCS settings
         :return:
         """
         raise NotImplementedError
 
     def get_user_email(self):
         """
-        Get user's email from CVS settings
+        Get user's email from VCS settings
         :return:
         """
         raise NotImplementedError

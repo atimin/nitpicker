@@ -1,6 +1,6 @@
 qa_dir:     test_qa
 no_editor:  true
 report_dir: test_report
-cvs:        test_cvs
+vcs:        test_vcs
 main_branch: test_branch
 debug: true

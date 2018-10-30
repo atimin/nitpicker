@@ -10,17 +10,17 @@ class RunCommandHandler:
     """
     Implements 'run' command
     """
-    def __init__(self, qa_dir, cvs_adapter, test_plan, report_dir, debug=False):
+    def __init__(self, qa_dir, vcs_adapter, test_plan, report_dir, debug=False):
         """
         :param qa_dir: The QA dir where it searches runs
-        :param cvs_adapter: CVS adapter to access to Repo
+        :param vcs_adapter: VCS adapter to access to Repo
         :param test_plan: the test plan to run
         :param report_dir: The dir where the QA report is generated
         :param report_dir: The list of cases in the plan to run. If it is None or '', all test are run
         :param report_dir: debug flag
         """
         self.__qa_dir = qa_dir
-        self.__cvs_adapter = cvs_adapter
+        self.__cvs_adapter = vcs_adapter
         self.__test_plan = test_plan
         self.__report_dir = report_dir
         self.__debug = debug

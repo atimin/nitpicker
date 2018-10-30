@@ -1,10 +1,10 @@
 import unittest
-from nitpicker.cvs.cvs_factory import CVSFactory
-from nitpicker.cvs.null_adapter import NullAdapter
-from nitpicker.cvs.cvs_adapter import CVSAdapter
+from nitpicker.vcs.vcs_factory import VCSFactory
+from nitpicker.vcs.null_adapter import NullAdapter
+from nitpicker.vcs.vcs_adapter import VCSAdapter
 
 
-class WrongAdapter(CVSAdapter):
+class WrongAdapter(VCSAdapter):
 
     def get_user_name(self):
         pass
@@ -19,10 +19,10 @@ class WrongAdapter(CVSAdapter):
 class TestCVSFactory(unittest.TestCase):
 
     def setUp(self):
-        self.__factory = CVSFactory()
+        self.__factory = VCSFactory()
 
     def test_create_null_adapter(self):
-        self.__factory.CVS_ADAPTERS['raise_exception'] = WrongAdapter
+        self.__factory.VCS_ADAPTERS['raise_exception'] = WrongAdapter
         self.assertEqual(NullAdapter, type(self.__factory.create_cvs_adapter('raise_exception')))
 
     def test_unsupported_adapter_type(self):
