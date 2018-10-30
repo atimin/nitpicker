@@ -2,11 +2,11 @@
 
 import click
 import yaml
-from nitpicker.cvs import CVSFactory
+from nitpicker.vcs import VCSFactory
 from nitpicker.commands import *
 
-__version__ = '0.4.0'
-__cvs_factory__ = CVSFactory()
+__version__ = '0.4.1'
+__vcs_factory__ = VCSFactory()
 
 
 @click.group()
@@ -17,21 +17,21 @@ __cvs_factory__ = CVSFactory()
               help='Not use the system editor when you create a new test case')
 @click.option('--report-dir', default=None,
               help='Report directory where the QA report should be created: Default: working directory')
-@click.option('--cvs', default=None,
-              help='CVS of the project. Default: git')
+@click.option('--vcs', default=None,
+              help='VCS of the project. Default: git')
 @click.option('--debug', type=bool, default=None, is_flag=True,
               help='Launch in debug mode')
 @click.option('--main-branch', type=str, default=None,
               help='Main branch in CVS repo where new features are to merge into')
 @click.pass_context
-def main(ctx, qa_dir, no_editor, report_dir, cvs, debug, main_branch):
+def main(ctx, qa_dir, no_editor, report_dir, vcs, debug, main_branch):
     """
     Nitpicker is a CLI tool for black-box testing
     """
-    __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, debug, main_branch)
+    __main_imp__(ctx, qa_dir, no_editor, report_dir, vcs, debug, main_branch)
 
 
-def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, debug, main_branch, cfg_file='.nitpicker.yml'):
+def __main_imp__(ctx, qa_dir, no_editor, report_dir, vcs, debug, main_branch, cfg_file='.nitpicker.yml'):
     ctx.obj = dict()
     user_config = None
 
@@ -51,7 +51,7 @@ def __main_imp__(ctx, qa_dir, no_editor, report_dir, cvs, debug, main_branch, cf
     init_config_param('qa_dir', qa_dir, 'qa')
     init_config_param('no_editor', no_editor, False)
     init_config_param('report_dir', report_dir, '')
-    init_config_param('cvs', cvs, 'git')
+    init_config_param('vcs', vcs, 'git')
     init_config_param('main_branch', main_branch, 'master')
     init_config_param('debug', debug, False)
 
@@ -79,7 +79,7 @@ def add(ctx, test_case_name, test_plan, force):
                                 test_case_name=test_case_name,
                                 test_plan=test_plan,
                                 no_editor=ctx.obj['no_editor'],
-                                cvs_adapter=__cvs_factory__.create_cvs_adapter(ctx.obj['cvs']))
+                                vcs_adapter=__vcs_factory__.create_cvs_adapter(ctx.obj['vcs']))
 
     success = handler.add_new_case(force)
     exit(0 if success else 1)
@@ -123,7 +123,7 @@ def run(ctx, test_plan, only):
     handler = ValidateCommandHandler(ctx.obj['qa_dir'])
     if handler.validate():
         handler = RunCommandHandler(ctx.obj['qa_dir'],
-                                    cvs_adapter=__cvs_factory__.create_cvs_adapter(ctx.obj['cvs']),
+                                    vcs_adapter=__vcs_factory__.create_cvs_adapter(ctx.obj['vcs']),
                                     test_plan=test_plan,
                                     report_dir=ctx.obj['report_dir'],
                                     debug=ctx.obj['debug'])
@@ -150,7 +150,7 @@ def check(ctx, all_runs_passed, has_new_runs):
     """
 
     handler = CheckCommandHandler(ctx.obj['qa_dir'],
-                                  cvs_adapter=__cvs_factory__.create_cvs_adapter(ctx.obj['cvs']),
+                                  vcs_adapter=__vcs_factory__.create_cvs_adapter(ctx.obj['vcs']),
                                   main_branch=ctx.obj['main_branch'])
     success = True
     if all_runs_passed:

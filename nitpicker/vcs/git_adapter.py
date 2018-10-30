@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-from .cvs_adapter import CVSAdapter
+from .vcs_adapter import VCSAdapter
 import git.cmd
 import git.exc
 import os
 
 
-class GitAdapter(CVSAdapter):
+class GitAdapter(VCSAdapter):
     """
-    Implements a cvs adapter for git repository.
+    Implements a VCS adapter for git repository.
     """
 
     EMPTY_TREE_SHA = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"

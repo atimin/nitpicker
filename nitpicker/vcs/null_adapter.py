@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from .cvs_adapter import CVSAdapter
+from .vcs_adapter import VCSAdapter
 
 
-class NullAdapter(CVSAdapter):
+class NullAdapter(VCSAdapter):
     """
     Null implementation of CVSAdapter
     """
