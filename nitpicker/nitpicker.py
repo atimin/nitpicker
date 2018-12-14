@@ -5,7 +5,7 @@ import yaml
 from nitpicker.vcs import VCSFactory
 from nitpicker.commands import *
 
-__version__ = '0.4.1'
+__version__ = '0.4.2'
 __vcs_factory__ = VCSFactory()
 
 

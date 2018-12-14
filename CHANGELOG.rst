@@ -1,3 +1,7 @@
+Release 0.4.2
+---------------------------------
+* Fix format error in 'check' command (@flipback)
+
 Release 0.4.1
 ---------------------------------
 * #16 Fix encoding error on the validation stage (@flipback)

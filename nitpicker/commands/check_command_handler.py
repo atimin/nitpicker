@@ -47,7 +47,7 @@ class CheckCommandHandler:
                     click.secho('[FAILED] {} ({})'.format(file, case['description']), fg='red')
                     click.secho('Failed step {}:'.format(case['failed_step']), bold=True)
                     click.echo('Done:     {}'.format(case['failed_action'].strip()))
-                    click.echo('Expected: {}'.format(case['failed_reaction'].strip()))
+                    click.echo('Expected: {}'.format(case['failed_expectation'].strip()))
                     click.echo('But got:  {}'.format(case['comment'].strip()))
                     failed_case_count += 1
                 elif case['status'] == 'skipped':
